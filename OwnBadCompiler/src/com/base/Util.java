@@ -6,6 +6,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+/*
+    A lot of the Util methods are not necessary, but they are left in for later use.
+    Keep in mind to shorten and optimize those methods in every possible way to increase performance.
+    Every unnecessary loop has to be prevented.
+
+    The Util method has a loose order: any non-boolean method goes on top, followed by the boolean ones.
+    Do pair up methods with the same purpose but different inputs.
+ */
+
 public class Util {
 
     public static String removeSemicolon(String input)
@@ -146,10 +155,8 @@ public class Util {
     {
         for (int i = 0; i < input.length(); i++)
             if ((input.charAt(i) == '+' || input.charAt(i) == '-') && input.length() <= 1)
-            {
-                System.out.println(input);
                 return true;
-            }
+
         return false;
     }
 
@@ -165,14 +172,14 @@ public class Util {
 
     public static boolean isInMethod(ArrayList<IndexedMethod> methods, String name)
     {
-
         for(IndexedMethod method : methods)
-        {
-            System.out.println(method.getName() + "/" + name);
             if(method.getName().equals(name))
                 return true;
-        }
         return false;
+    }
 
+    public static boolean isCommentedOut(String line)
+    {
+        return line.length() > 1 && line.substring(0, 2).equals("//");
     }
 }

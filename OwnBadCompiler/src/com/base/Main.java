@@ -1,6 +1,11 @@
 package com.base;
 
 
+/*
+    Entry point for Java.
+    Also used for measuring the overall performance.
+ */
+
 public class Main
 {
 
@@ -8,7 +13,7 @@ public class Main
     {
         double starttime, endtime;
 
-        int iterations = 0;
+        int iterations = 10;
 
         //warm-up for better benchmarking, set iteration to 0 to prevent console spam
         for (int i=0; i<iterations; i++)
