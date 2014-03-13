@@ -6,6 +6,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+/*
+    A lot of the Util methods are not necessary, but they are left in for later use.
+    Keep in mind to shorten and optimize those methods in every possible way to increase performance.
+    Every unnecessary loop has to be prevented.
+
+    The Util method has a loose order: any non-boolean method goes on top, followed by the boolean ones.
+    Do pair up methods with the same purpose but different inputs.
+ */
+
 public class Util {
 
     public static String removeSemicolon(String input)

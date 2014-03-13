@@ -1,6 +1,10 @@
 package com.base;
 
 
+/*
+    Entry point for Java.
+ */
+
 public class Main
 {
 

@@ -9,6 +9,13 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
 
+/*
+    The Reader is the entry point for the whole class as it runs everything right from the constructor.
+    The startTime, endTime etc. is all for performance testing. The console will tell you the speed of
+    the program in ms.
+*/
+
+
 public class Reader
 {
     double startTime, endTime, startFinal, endFinal;
@@ -22,11 +29,11 @@ public class Reader
     {
         startFinal = System.nanoTime();
 
-
-        startTime = System.nanoTime();
         /** index file **/
+        startTime = System.nanoTime();
         indexContent(fileName);
         endTime = System.nanoTime();
+
         stepFinal[0] = endTime - startTime;
 
 
@@ -34,10 +41,11 @@ public class Reader
         startTime = System.nanoTime();
         indexedMethods = Parse.parseMethods(indexedLines);
         endTime = System.nanoTime();
+
         stepFinal[1] = endTime - startTime;
 
         /** check for variable mistakes etc **/
-        //TODO
+        //TODO: actually add this
 
 
         startTime = System.nanoTime();
@@ -48,10 +56,9 @@ public class Reader
                 System.out.println("Indexed statements are: " + statement);
             System.out.println();
         }
-
         endTime = System.nanoTime();
-        stepFinal[9] = endTime - startTime;
 
+        stepFinal[9] = endTime - startTime;
         endFinal = System.nanoTime();
 
         System.out.println();
@@ -74,13 +81,13 @@ public class Reader
 
         if(!extention.equals("txt"))
         {
-            System.err.println("Error: not a .txt file");
+            System.err.println("Error: file is not a .txt file");
             System.exit(-1);
         }
 
         try
         {
-            BufferedReader reader = new BufferedReader((new FileReader("/Users/Phil/Desktop/" + fileName)));
+            BufferedReader reader = new BufferedReader((new FileReader("./files/" + fileName)));
             String line;
 
             int lineCount = 1;

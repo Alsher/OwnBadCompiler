@@ -1,12 +1,13 @@
 package com.base;
 
-import com.base.Indexed.*;
 import com.base.Indexed.Actions.ObjectInteger;
 import com.base.Indexed.Actions.ObjectString;
+import com.base.Indexed.IndexedLine;
+import com.base.Indexed.IndexedMethod;
+import com.base.Indexed.IndexedStatement;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 
 
 public class Parse{
@@ -24,6 +25,9 @@ public class Parse{
         /** find and index method **/
         for(IndexedLine cont : content)
         {
+            if(cont.getLine().substring(0, 1).equals("//"))
+                break;
+
             String[] tokens = cont.getLine().split(" ");
             switch(tokens[0])
             {
@@ -40,29 +44,25 @@ public class Parse{
 
                     bracePosition = new ArrayList<>();              //clear bracePosition array
                     statements = new ArrayList<>();                 //clear statements
-                    returnList.add(preReturn);                      //add to returnList
+                    returnList.add(preReturn);                      //add to returnList, may not be necessary
                     break;
             }
         }
         return returnList;
     }
 
-    public static IndexedStatement parseStatement(IndexedLine line)
+    private static IndexedStatement parseStatement(IndexedLine line)
     {
         String[] tokensString = line.getLine().split(" ");
-        ArrayList<String> tokens = new ArrayList<>();
 
-        Collections.addAll(tokens, tokensString);
-
-        switch(tokens.get(0))
+        switch(tokensString[0])
         {
             case "int": return new IndexedStatement(new ObjectInteger(parseInteger(line)));
             case "String": return new IndexedStatement(new ObjectString(parseString(line)));
-            case "return": return null;
+            case "return": return null; //TODO: add return function
 
+            default: return null; //if the line is not recognized it will return null
         }
-        System.out.println(tokens);
-        return null;
     }
 
     private static ObjectInteger parseInteger(IndexedLine line)
@@ -75,10 +75,10 @@ public class Parse{
         list = Util.removeFromTo(list, 0, 2);
         list = Util.removeSemicolon(list);
 
-        returnInteger.setName(tokenString[1]); //set name
-        returnInteger.setLineNumber(line.getLineNumber()); //set line number
+        returnInteger.setLineNumber(line.getLineNumber());  //set line number
+        returnInteger.setName(tokenString[1]);              //set var name
+        returnInteger.setValue(MathSystem.calculate(list)); //do the math and add it returnInteger
 
-        returnInteger.setValue(MathSystem.calculate(list)); //do the math
         return returnInteger;
     }
 
@@ -88,9 +88,9 @@ public class Parse{
 
         String[] tokenString = line.getLine().split(" ");
 
-        returnString.setLineNumber(line.getLineNumber());
-        returnString.setName(tokenString[1]);
-        returnString.setContent(Util.getMarkedString(line.getLine()));
+        returnString.setLineNumber(line.getLineNumber());               //set line number
+        returnString.setName(tokenString[1]);                           //set var name
+        returnString.setContent(Util.getMarkedString(line.getLine()));  //set content
 
         return returnString;
     }
