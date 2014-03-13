@@ -25,8 +25,8 @@ public class Parse{
         /** find and index method **/
         for(IndexedLine cont : content)
         {
-            if(cont.getLine().substring(0, 1).equals("//"))
-                break;
+            if(Util.isCommentedOut(cont.getLine())) //may eat performance
+                continue;
 
             String[] tokens = cont.getLine().split(" ");
             switch(tokens[0])
@@ -35,9 +35,9 @@ public class Parse{
                 case "+": break; //might me added later
 
                 default: statements.add(parseStatement(cont));
-                case "{": bracePosition.add(cont.getLineNumber()); break;
+                case "{": bracePosition.add(cont.getLineNumber()); break; //add the first brace position
                 case "}":
-                    bracePosition.add(cont.getLineNumber());
+                    bracePosition.add(cont.getLineNumber());        //add the second brace position
                     preReturn.setBraceStart(bracePosition.get(0));  //set brace positions in preReturn
                     preReturn.setBraceEnd(bracePosition.get(1));    //set brace positions in preReturn
                     preReturn.setStatements(statements);            //set statements in preReturn to local statements array
@@ -72,8 +72,8 @@ public class Parse{
         String[] tokenString = line.getLine().split(" ");
 
         ArrayList<String> list = new ArrayList<>(Arrays.asList(tokenString));
-        list = Util.removeFromTo(list, 0, 2);
-        list = Util.removeSemicolon(list);
+        list = Util.removeFromTo(list, 0, 2);               //remove everything before the "=" operator, also including the operator
+        list = Util.removeSemicolon(list);                  //remove the semicolon to prevent a nuke in the MathSystem
 
         returnInteger.setLineNumber(line.getLineNumber());  //set line number
         returnInteger.setName(tokenString[1]);              //set var name

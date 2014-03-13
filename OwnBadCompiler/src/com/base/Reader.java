@@ -77,9 +77,9 @@ public class Reader
     private void indexContent(String fileName)
     {
         String[] splitArray = fileName.split("\\.");
-        String extention = splitArray[splitArray.length - 1]; //get file extension
+        String extension = splitArray[splitArray.length - 1]; //get file extension
 
-        if(!extention.equals("txt"))
+        if(!extension.equals("txt"))
         {
             System.err.println("Error: file is not a .txt file");
             System.exit(-1);
@@ -91,18 +91,14 @@ public class Reader
             String line;
 
             int lineCount = 1;
-            int emptyLineCount = 0;
 
             /** add each line to system wide content variable **/
             while((line = reader.readLine()) != null)
-            {
                 if(!line.equals(""))
                 {
                     indexedLines.add(new IndexedLine(lineCount, line));
                     lineCount++;
                 }
-                emptyLineCount++;
-            }
         }
         catch(Exception e)
         {
@@ -115,9 +111,11 @@ public class Reader
     {
         indexedLines = null;
         indexedMethods = null;
+
+        //more to be added in the future
     }
 
-    /**  Getters and Setters **/
+
     public ArrayList<IndexedLine> getIndexedLines() {
         return indexedLines;
     }

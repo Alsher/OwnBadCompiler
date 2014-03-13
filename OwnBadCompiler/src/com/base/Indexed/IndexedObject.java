@@ -9,6 +9,9 @@ package com.base.Indexed;
     to specify a constructor for every single action.
 
     The toString() method should return in the following format: [Content1:-content- | Content2:-content- | Content3:-content-]
+
+    Every IndexedObject should have an empty Constructor and a full one, taking in every single parameter.
+
  */
 
 public abstract class IndexedObject

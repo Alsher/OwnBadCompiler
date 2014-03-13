@@ -1,3 +1,5 @@
+//first test
+//yay it works
 - (int) main:
 {
 String helloString = "hallo";

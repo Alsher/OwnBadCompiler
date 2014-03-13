@@ -155,10 +155,8 @@ public class Util {
     {
         for (int i = 0; i < input.length(); i++)
             if ((input.charAt(i) == '+' || input.charAt(i) == '-') && input.length() <= 1)
-            {
-                System.out.println(input);
                 return true;
-            }
+
         return false;
     }
 
@@ -174,14 +172,14 @@ public class Util {
 
     public static boolean isInMethod(ArrayList<IndexedMethod> methods, String name)
     {
-
         for(IndexedMethod method : methods)
-        {
-            System.out.println(method.getName() + "/" + name);
             if(method.getName().equals(name))
                 return true;
-        }
         return false;
+    }
 
+    public static boolean isCommentedOut(String line)
+    {
+        return line.length() > 1 && line.substring(0, 2).equals("//");
     }
 }
