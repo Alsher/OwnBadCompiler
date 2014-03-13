@@ -1,5 +1,6 @@
 package com.base;
 
+
 import java.util.ArrayList;
 
 public class MathSystem {

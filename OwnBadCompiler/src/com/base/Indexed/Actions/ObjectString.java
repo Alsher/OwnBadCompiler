@@ -2,6 +2,7 @@ package com.base.Indexed.Actions;
 
 import com.base.Indexed.IndexedObject;
 
+
 public class ObjectString extends IndexedObject {
 
     private int lineNumber;

@@ -9,13 +9,6 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
 
-/*
-    The Reader is the entry point for the whole class as it runs everything right from the constructor.
-    The startTime, endTime etc. is all for performance testing. The console will tell you the speed of
-    the program in ms.
-*/
-
-
 public class Reader
 {
     double startTime, endTime, startFinal, endFinal;
@@ -29,11 +22,11 @@ public class Reader
     {
         startFinal = System.nanoTime();
 
-        /** index file **/
+
         startTime = System.nanoTime();
+        /** index file **/
         indexContent(fileName);
         endTime = System.nanoTime();
-
         stepFinal[0] = endTime - startTime;
 
 
@@ -41,11 +34,10 @@ public class Reader
         startTime = System.nanoTime();
         indexedMethods = Parse.parseMethods(indexedLines);
         endTime = System.nanoTime();
-
         stepFinal[1] = endTime - startTime;
 
         /** check for variable mistakes etc **/
-        //TODO: actually add this
+        //TODO
 
 
         startTime = System.nanoTime();
@@ -56,9 +48,10 @@ public class Reader
                 System.out.println("Indexed statements are: " + statement);
             System.out.println();
         }
-        endTime = System.nanoTime();
 
+        endTime = System.nanoTime();
         stepFinal[9] = endTime - startTime;
+
         endFinal = System.nanoTime();
 
         System.out.println();
@@ -77,28 +70,32 @@ public class Reader
     private void indexContent(String fileName)
     {
         String[] splitArray = fileName.split("\\.");
-        String extension = splitArray[splitArray.length - 1]; //get file extension
+        String extention = splitArray[splitArray.length - 1]; //get file extension
 
-        if(!extension.equals("txt"))
+        if(!extention.equals("txt"))
         {
-            System.err.println("Error: file is not a .txt file");
+            System.err.println("Error: not a .txt file");
             System.exit(-1);
         }
 
         try
         {
-            BufferedReader reader = new BufferedReader((new FileReader("./files/" + fileName)));
+            BufferedReader reader = new BufferedReader((new FileReader("/Users/Phil/Desktop/" + fileName)));
             String line;
 
             int lineCount = 1;
+            int emptyLineCount = 0;
 
             /** add each line to system wide content variable **/
             while((line = reader.readLine()) != null)
+            {
                 if(!line.equals(""))
                 {
                     indexedLines.add(new IndexedLine(lineCount, line));
                     lineCount++;
                 }
+                emptyLineCount++;
+            }
         }
         catch(Exception e)
         {
@@ -111,11 +108,9 @@ public class Reader
     {
         indexedLines = null;
         indexedMethods = null;
-
-        //more to be added in the future
     }
 
-
+    /**  Getters and Setters **/
     public ArrayList<IndexedLine> getIndexedLines() {
         return indexedLines;
     }
