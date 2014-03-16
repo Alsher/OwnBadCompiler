@@ -3,11 +3,10 @@ package com.base;
 
 import com.base.Indexed.IndexedLine;
 import com.base.Indexed.IndexedMethod;
-import com.base.Indexed.IndexedObject;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.util.ArrayList;
+import java.util.*;
 
 /*
     The Reader is the entry point for the whole class as it runs everything right from the constructor.
@@ -22,7 +21,7 @@ public class Reader
 
     private ArrayList<IndexedLine> indexedLines = new ArrayList<>();
 
-    private ArrayList<IndexedMethod> indexedMethods = new ArrayList<>();
+    private static HashMap<String, IndexedMethod> hashedMethods = new HashMap<>();
 
     public Reader(String fileName)
     {
@@ -30,17 +29,16 @@ public class Reader
 //        indexContent(fileName);
 //
 //        /** index methods **/
-//        indexedMethods = Parse.parseMethods(indexedLines);
-//
+//        hashedMethods = Parse.parseMethods(indexedLines);
 //
 //        /** output what we parsed so far **/
-//        for(IndexedMethod indexd : indexedMethods)
+//        for (String key : keys)
 //        {
-//            System.out.println("Indexed methods are: " + indexd);
-//            for(IndexedObject object : indexd.getObject())
-//                System.out.println("Indexed objects are: " + object);
-//            System.out.println("Indexed variables are:" + indexd.getVariables());
+//            System.out.println("Indexed methods are: " + hashedMethods.get(key));
+//            System.out.println("Indexed variables are: " + hashedMethods.get(key).getVariables());
+//            System.out.println("Indexed objects are: " + hashedMethods.get(key).getObject());
 //            System.out.println();
+//
 //        }
 
         startFinal = System.nanoTime();
@@ -55,7 +53,7 @@ public class Reader
 
         /** index method headers and content **/
         startTime = System.nanoTime();
-        indexedMethods = Parse.parseMethods(indexedLines);
+        hashedMethods = Parse.parseMethods(indexedLines);
         endTime = System.nanoTime();
 
         stepFinal[1] = endTime - startTime;
@@ -65,14 +63,16 @@ public class Reader
 
 
         startTime = System.nanoTime();
-        for(IndexedMethod indexd : indexedMethods)
+
+        List<String> keys = new ArrayList<>(hashedMethods.keySet());
+        for (String key : keys)
         {
-            System.out.println("Indexed methods are: " + indexd);
-            for(IndexedObject object : indexd.getObject())
-                System.out.println("Indexed objects are: " + object);
-            System.out.println("Indexed variables are:" + indexd.getVariables());
-            System.out.println();
+                System.out.println("Indexed methods are: " + hashedMethods.get(key));
+                System.out.println("Indexed variables are: " + hashedMethods.get(key).getVariables());
+                System.out.println("Indexed objects are: " + hashedMethods.get(key).getObject());
+                System.out.println();
         }
+
         endTime = System.nanoTime();
 
         stepFinal[9] = endTime - startTime;
@@ -126,7 +126,7 @@ public class Reader
     public void destroy()
     {
         indexedLines = null;
-        indexedMethods = null;
+        hashedMethods = null;
 
         //more to be added in the future
     }
@@ -138,10 +138,18 @@ public class Reader
     public void setIndexedLines(ArrayList<IndexedLine> indexedLines) {
         this.indexedLines = indexedLines;
     }
-    public ArrayList<IndexedMethod> getIndexedMethods() {
-        return indexedMethods;
+
+    public static HashMap<String, IndexedMethod> getHashedMethods() {
+        return hashedMethods;
     }
-    public void setIndexedMethods(ArrayList<IndexedMethod> indexedMethods) {
-        this.indexedMethods = indexedMethods;
+    public static void setHashedMethods(HashMap<String, IndexedMethod> hashedMethods) {
+        Reader.hashedMethods = hashedMethods;
+    }
+
+    public static void addMethod(String name, IndexedMethod method) {
+        hashedMethods.put(name, method);
+    }
+    public static IndexedMethod getMethod(String name) {
+        return hashedMethods.get(name);
     }
 }

@@ -15,8 +15,9 @@ public class IndexedMethod {
     private Integer braceStart, braceEnd;
     private ArrayList<IndexedObject> objects;
     private HashMap<String, IndexedObject> variables;
+    private IndexedObject returnObject;
 
-    public IndexedMethod(Integer headerLineNumber, String type, String name, int braceStart, int braceEnd, ArrayList<IndexedObject> objects, HashMap<String, IndexedObject> variables)
+    public IndexedMethod(Integer headerLineNumber, String type, String name, int braceStart, int braceEnd, ArrayList<IndexedObject> objects, HashMap<String, IndexedObject> variables, IndexedObject returnObject)
     {
         this.headerLineNumber = headerLineNumber;
         this.type = type;
@@ -25,6 +26,7 @@ public class IndexedMethod {
         this.braceEnd = braceEnd;
         this.objects = objects;
         this.variables = variables;
+        this.returnObject = returnObject;
     }
 
     public IndexedMethod(Integer headerLineNumber, String type, String name)
@@ -44,7 +46,7 @@ public class IndexedMethod {
     @Override
     public String toString()
     {
-        return "[Head line:" + headerLineNumber + " Start line:" + braceStart + " | End line:" + braceEnd + " | Method type:" + type + " | Name: " + Util.removeMethodIndicator(name) + " | Has content: " + (braceStart != null && braceEnd != null) + "]";
+        return "[Head line:" + headerLineNumber + " Start line:" + braceStart + " | End line:" + braceEnd + " | Method type:" + type + " | Name: " + Util.removeMethodIndicator(name) + " | Has content: " + (braceStart != null && braceEnd != null) + " | Return object: " + returnObject + "]";
     }
 
 
@@ -60,10 +62,10 @@ public class IndexedMethod {
     }
 
     public String getName() {
-        return name.substring(0, name.length() - 2);
+        return name.substring(0, name.length() - 1);
     }
     public void setName(String name) {
-        this.name = name + "()";
+        this.name = name + ":";
     }
 
     public Integer getBraceStart() {
@@ -114,5 +116,12 @@ public class IndexedMethod {
     public IndexedObject getVariable(String name)
     {
         return variables.get(name);
+    }
+
+    public IndexedObject getReturnObject() {
+        return returnObject;
+    }
+    public void setReturnObject(IndexedObject returnObject) {
+        this.returnObject = returnObject;
     }
 }

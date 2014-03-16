@@ -20,4 +20,5 @@ public abstract class IndexedObject<T>
 
     public abstract String toString();
     public abstract T getValue();
+    public abstract int getLineNumber();
 }

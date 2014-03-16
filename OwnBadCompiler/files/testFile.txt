@@ -8,12 +8,14 @@ String helloString = "hallo";
 - (void) noReturn:
 {
 int oneInteger = -40 - 20 + 80 + 18 + 8 - 4 - 84;
+int methodInteger = 1;
 }
 
 - (int) intReturn:
 {
-int integer = -100 + 142;
-return integer;
+int integer1 = 2;
+int integer2 = integer1 + 50;
+return integer2;
 }
 
 - (String) stringReturn:

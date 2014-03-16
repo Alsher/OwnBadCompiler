@@ -18,9 +18,9 @@ public class Parse{
     static HashMap<String, IndexedObject> variables = new HashMap<>();
     static ArrayList<Integer> bracePosition = new ArrayList<>();
 
-    public static ArrayList<IndexedMethod> parseMethods(ArrayList<IndexedLine> content)
+    public static HashMap<String, IndexedMethod> parseMethods(ArrayList<IndexedLine> content)
     {
-        ArrayList<IndexedMethod> returnMethods = new ArrayList<>();
+        HashMap<String, IndexedMethod>  returnMethods = new HashMap<>();
         IndexedMethod preReturn = new IndexedMethod();
 
         /** find and index method **/
@@ -35,7 +35,7 @@ public class Parse{
                 case "-": preReturn = new IndexedMethod(cont.getLineNumber(), Util.removeBrackets(tokens[1]), tokens[2]); break;
                 case "+": break; //might me added later
 
-                default: parseStatement(cont);
+                default: if(Util.isCompleteStatement(tokens)) parseStatement(cont); else System.err.println("Error: \"" + cont.getLine() + "\" is not a complete statement!"); break;
                 case "{": bracePosition.add(cont.getLineNumber()); break; //add the first brace position
                 case "}":
                     bracePosition.add(cont.getLineNumber());        //add the second brace position
@@ -47,7 +47,7 @@ public class Parse{
                     bracePosition = new ArrayList<>();              //clear bracePosition array
                     statements = new ArrayList<>();                 //clear statements
                     variables = new HashMap<>();                    //clear variables
-                    returnMethods.add(preReturn);                   //add to returnMethods, may not be necessary
+                    returnMethods.put(preReturn.getName(), preReturn);                   //add to returnMethods, may not be necessary
                     break;
             }
         }
@@ -64,7 +64,7 @@ public class Parse{
             case "String": parseString(line); break;
             case "return": parseReturn(line); break;
 
-            default: break;
+            default: parseDefault(line); break;
         }
     }
 
@@ -80,6 +80,14 @@ public class Parse{
 
         object.setLineNumber(line.getLineNumber());         //set line number
         object.setName(tokenString[1]);                     //set var name
+
+//        TODO: add nonInteger return check
+//        TODO: add multiphase parsing system
+//        System.out.println(Util.removeBrackets(Util.removeSemicolon(list.get(list.size() - 1))));
+//        IndexedMethod method = Reader.getHashedMethods().get(Util.removeBrackets(Util.removeSemicolon(list.get(list.size() - 1))));
+//        if(method != null)
+//            object.setIntValue((Integer)method.getReturnObject().getValue());
+
         object.setIntValue(MathSystem.calculate(list));     //do the math and add it returnInteger
 
         variables.put(object.getName(), object);
@@ -100,20 +108,33 @@ public class Parse{
 
     private static void parseReturn(IndexedLine line)
     {
-        ObjectReturn returnObject = new ObjectReturn();
+        ObjectReturn object = new ObjectReturn();
 
         String[] tokenString = line.getLine().split(" ");
         tokenString[1] = Util.removeSemicolon(tokenString[1]);      //removes semicolon for proper variables.get() call
 
-        returnObject.setLineNumber(line.getLineNumber());
+        object.setLineNumber(line.getLineNumber());
 
         IndexedObject variableName = variables.get(tokenString[1]); //create a local indexedObject to prevent unnecessary variables.get() call
 
         if(variableName != null)                                    //checks for an invalid variable name
-            returnObject.setReturnObject(variableName);
+            object.setReturnObject(variableName);
         else
             System.err.println("Error: \"" + tokenString[1] + "\" is not an introduced variable!");
 
-        statements.add(returnObject);
+        statements.add(object);
+    }
+
+    private static void parseDefault(IndexedLine line)
+    {
+        String[] tokenString = line.getLine().split(" ");
+
+        IndexedObject object = variables.get(tokenString[0]);
+        if(object != null && Util.isInteger(object.getValue().toString()))
+        {
+            ObjectInteger integerObject = new ObjectInteger(tokenString[0], variables.get(tokenString[0]));
+            integerObject.setIntValue(MathSystem.calculate(tokenString, 0, 1));
+            variables.put(tokenString[0], integerObject);
+        }
     }
 }

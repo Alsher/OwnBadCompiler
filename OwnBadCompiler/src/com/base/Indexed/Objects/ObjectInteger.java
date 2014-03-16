@@ -26,6 +26,15 @@ public class ObjectInteger extends IndexedObject {
     public ObjectInteger()
     {}
 
+    public ObjectInteger(String name, IndexedObject object)
+    {
+        this.name = name;
+        this.lineNumber = object.getLineNumber();
+
+        try { this.intValue = (Integer)object.getValue(); } //this can fail due to object being a string or not value
+        catch(Exception e) { e.printStackTrace(); }
+    }
+
     @Override
     public String toString()
     {
