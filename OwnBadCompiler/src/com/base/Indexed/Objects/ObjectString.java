@@ -1,4 +1,4 @@
-package com.base.Indexed.Actions;
+package com.base.Indexed.Objects;
 
 import com.base.Indexed.IndexedObject;
 
@@ -28,7 +28,13 @@ public class ObjectString extends IndexedObject {
     @Override
     public String toString()
     {
-        return "[Line:" + lineNumber + " | Name:" + name + " | Content:" + content + "]";
+        return "[Line:" + lineNumber + " | Type: string variable | Name:" + name + " | Content:" + content + "]";
+    }
+
+    @Override
+    public String getValue()
+    {
+        return content;
     }
 
     public int getLineNumber() {

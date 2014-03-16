@@ -3,6 +3,7 @@ package com.base.Indexed;
 import com.base.Util;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 //will be overhauled
 
@@ -12,18 +13,18 @@ public class IndexedMethod {
     private String type;
     private String name;
     private Integer braceStart, braceEnd;
-    private ArrayList<IndexedStatement> statements;
-    private IndexedStatement returnStatement;
+    private ArrayList<IndexedObject> objects;
+    private HashMap<String, IndexedObject> variables;
 
-    public IndexedMethod(Integer headerLineNumber, String type, String name, int braceStart, int braceEnd, ArrayList<IndexedStatement> statements, IndexedStatement returnStatement)
+    public IndexedMethod(Integer headerLineNumber, String type, String name, int braceStart, int braceEnd, ArrayList<IndexedObject> objects, HashMap<String, IndexedObject> variables)
     {
         this.headerLineNumber = headerLineNumber;
         this.type = type;
         this.name = name;
         this.braceStart = braceStart;
         this.braceEnd = braceEnd;
-        this.statements = statements;
-        this.returnStatement = returnStatement;
+        this.objects = objects;
+        this.variables = variables;
     }
 
     public IndexedMethod(Integer headerLineNumber, String type, String name)
@@ -37,13 +38,13 @@ public class IndexedMethod {
     {
         type = null;
         name = null;
-        statements = null;
+        objects = null;
     }
 
     @Override
     public String toString()
     {
-        return "[Head line:" + headerLineNumber + " Start line:" + braceStart + " | End line:" + braceEnd + " | Method type:" + type + " | Name: " + Util.removeMethodIndicator(name) + " | Has content: " + (braceStart != null && braceEnd != null) + " | Return statement: " + "not yet implemented" + "]";
+        return "[Head line:" + headerLineNumber + " Start line:" + braceStart + " | End line:" + braceEnd + " | Method type:" + type + " | Name: " + Util.removeMethodIndicator(name) + " | Has content: " + (braceStart != null && braceEnd != null) + "]";
     }
 
 
@@ -79,28 +80,39 @@ public class IndexedMethod {
         this.braceEnd = braceEnd;
     }
 
-    public ArrayList<IndexedStatement> getStatements() {
-        return statements;
+    public ArrayList<IndexedObject> getObject() {
+        return objects;
     }
-    public void setStatements(ArrayList<IndexedStatement> statements) {
-        this.statements = statements;
-    }
-
-    public void addStatement(IndexedStatement statement) {
-        statements.add(statement);
-    }
-    public void addStatementAtPosition(IndexedStatement statement, int index) {
-        statements.add(index, statement);
+    public void setObject(ArrayList<IndexedObject> objects) {
+        this.objects = objects;
     }
 
-    public void setStatementAtPosition(IndexedStatement statement, int index) {
-        statements.set(index, statement);
+    public void addObject(IndexedObject object) {
+        objects.add(object);
+    }
+    public void addObjectAtPosition(IndexedObject object, int index) {
+        objects.add(index, object);
     }
 
-    public IndexedStatement getReturnStatement() {
-        return returnStatement;
+    public void setObjectAtPosition(IndexedObject object, int index) {
+        objects.set(index, object);
     }
-    public void setReturnStatement(IndexedStatement returnStatement) {
-        this.returnStatement = returnStatement;
+
+    public HashMap<String, IndexedObject> getVariables() {
+        return variables;
+    }
+
+    public void setVariables(HashMap<String, IndexedObject> variables) {
+        this.variables = variables;
+    }
+
+    public void addVariable(String name, IndexedObject variable)
+    {
+        variables.put(name, variable);
+    }
+
+    public IndexedObject getVariable(String name)
+    {
+        return variables.get(name);
     }
 }

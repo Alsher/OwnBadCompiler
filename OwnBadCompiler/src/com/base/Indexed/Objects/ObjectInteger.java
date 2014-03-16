@@ -1,4 +1,4 @@
-package com.base.Indexed.Actions;
+package com.base.Indexed.Objects;
 
 import com.base.Indexed.IndexedObject;
 
@@ -7,20 +7,20 @@ public class ObjectInteger extends IndexedObject {
 
     private int lineNumber;
     private String name;
-    private int value;
+    private int intValue;
 
-    public ObjectInteger(int line, String name, int value)
+    public ObjectInteger(int line, String name, int intValue)
     {
         this.lineNumber = line;
         this.name = name;
-        this.value = value;
+        this.intValue = intValue;
     }
 
     public ObjectInteger(ObjectInteger objectInteger)
     {
         this.lineNumber = objectInteger.getLineNumber();
         this.name = objectInteger.getName();
-        this.value = objectInteger.getValue();
+        this.intValue = objectInteger.getIntValue();
     }
 
     public ObjectInteger()
@@ -29,7 +29,13 @@ public class ObjectInteger extends IndexedObject {
     @Override
     public String toString()
     {
-        return "[Line:" + lineNumber + " | Name:" + name + " | Value:" + value + "]";
+        return "[Line:" + lineNumber + " | Type: integer variable | Name:" + name + " | Value:" + intValue + "]";
+    }
+
+    @Override
+    public Integer getValue()
+    {
+        return intValue;
     }
 
     public String getName() {
@@ -42,10 +48,10 @@ public class ObjectInteger extends IndexedObject {
     public void setName(String name) {
         this.name = name;
     }
-    public int getValue() {
-        return value;
+    public int getIntValue() {
+        return intValue;
     }
-    public void setValue(int value) {
-        this.value = value;
+    public void setIntValue(int intValue) {
+        this.intValue = intValue;
     }
 }

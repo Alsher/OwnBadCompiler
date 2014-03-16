@@ -3,7 +3,7 @@ package com.base;
 
 import com.base.Indexed.IndexedLine;
 import com.base.Indexed.IndexedMethod;
-import com.base.Indexed.IndexedStatement;
+import com.base.Indexed.IndexedObject;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -14,7 +14,6 @@ import java.util.ArrayList;
     The startTime, endTime etc. is all for performance testing. The console will tell you the speed of
     the program in ms.
 */
-
 
 public class Reader
 {
@@ -27,6 +26,23 @@ public class Reader
 
     public Reader(String fileName)
     {
+//        /** index file **/
+//        indexContent(fileName);
+//
+//        /** index methods **/
+//        indexedMethods = Parse.parseMethods(indexedLines);
+//
+//
+//        /** output what we parsed so far **/
+//        for(IndexedMethod indexd : indexedMethods)
+//        {
+//            System.out.println("Indexed methods are: " + indexd);
+//            for(IndexedObject object : indexd.getObject())
+//                System.out.println("Indexed objects are: " + object);
+//            System.out.println("Indexed variables are:" + indexd.getVariables());
+//            System.out.println();
+//        }
+
         startFinal = System.nanoTime();
 
         /** index file **/
@@ -52,8 +68,9 @@ public class Reader
         for(IndexedMethod indexd : indexedMethods)
         {
             System.out.println("Indexed methods are: " + indexd);
-            for(IndexedStatement statement : indexd.getStatements())
-                System.out.println("Indexed statements are: " + statement);
+            for(IndexedObject object : indexd.getObject())
+                System.out.println("Indexed objects are: " + object);
+            System.out.println("Indexed variables are:" + indexd.getVariables());
             System.out.println();
         }
         endTime = System.nanoTime();
@@ -71,7 +88,6 @@ public class Reader
         System.out.println();
 
         System.out.println("The whole operation took " + ((endFinal - startFinal) / (double)1000000) + " ms.");
-
     }
 
     private void indexContent(String fileName)

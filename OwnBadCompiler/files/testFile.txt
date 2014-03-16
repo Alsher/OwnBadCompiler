@@ -7,15 +7,17 @@ String helloString = "hallo";
 
 - (void) noReturn:
 {
-int integer = -40 - 20 + 80 + 18 + 8 - 4 - 84;
+int oneInteger = -40 - 20 + 80 + 18 + 8 - 4 - 84;
 }
 
 - (int) intReturn:
 {
 int integer = -100 + 142;
+return integer;
 }
 
 - (String) stringReturn:
 {
-String returnString = "plz return me - oh look its a space string";
+String returnString = "such a cool string";
+return returnString;
 }

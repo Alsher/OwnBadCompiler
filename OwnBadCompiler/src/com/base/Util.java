@@ -3,6 +3,7 @@ package com.base;
 import com.base.Indexed.IndexedMethod;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -111,6 +112,17 @@ public class Util {
         return input;
     }
 
+    public static String[] removeFromTo(String[] input, int start, int end)
+    {
+        ArrayList<String> list = new ArrayList<>(Arrays.asList(input));
+        removeFromTo(list, start, end);
+        String[] array = new String[list.size()];
+        list.toArray(array);
+
+        System.out.println(Arrays.toString(input) + " | " + Arrays.toString(array));
+        return array;
+    }
+
     public static String getMarkedString(String line)
     {
         int markStart = 0, markEnd = 0, counter = 1;
@@ -126,6 +138,7 @@ public class Util {
 
         if(counter >= line.length())
             return line.substring(markStart, markEnd - 1);
+
 
         return "ERROR: getMarkedString FAILED";
     }
