@@ -72,8 +72,8 @@ public class ParseSystem {
     {
         ObjectString object = new ObjectString();
 
-        object.setLineNumber(lineNumber);               //set line number
-        object.setName(tokens[1]);                           //set var name
+        object.setLineNumber(lineNumber);                                  //set line number
+        object.setName(tokens[1]);                                         //set var name
         object.setContent(Util.getMarkedString(Arrays.toString(tokens)));  //set content
 
         variables.put(object.getName(), object);
@@ -83,11 +83,11 @@ public class ParseSystem {
     {
         ObjectReturn object = new ObjectReturn();
 
-        tokens[1] = Util.removeSemicolon(tokens[1]);      //removes semicolon for proper variables.get() call
+        tokens[1] = Util.removeSemicolon(tokens[1]);                //removes semicolon for proper variables.get() call
 
         object.setLineNumber(lineNumber);
 
-        IndexedObject variableName = variables.get(tokens[1]); //create a local indexedObject to prevent unnecessary variables.get() call
+        IndexedObject variableName = variables.get(tokens[1]);      //create a local indexedObject to prevent unnecessary variables.get() call
 
         if(variableName != null)                                    //checks for an invalid variable name
             object.setReturnObject(variableName);

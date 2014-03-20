@@ -1,9 +1,13 @@
 package com.base.Indexed;
 
-//will be overhauled
-
 import java.util.ArrayList;
 import java.util.HashMap;
+
+/*
+    A IndexedMethod will be any kind of method, both including a returning one and a void one.
+    Every IndexedMethod must have the getters and setters listed below.
+    A call function will be added in the future for easier method-call systems.
+ */
 
 public abstract class IndexedMethod {
 
