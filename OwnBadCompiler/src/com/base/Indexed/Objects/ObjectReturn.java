@@ -17,13 +17,13 @@ public class ObjectReturn extends IndexedObject{
 
     public ObjectReturn()
     {
-
+        this.lineNumber = -1;
     }
 
     @Override
     public String toString()
     {
-        return "[Line:" + lineNumber + " | Type: return statement | Return Object:" + returnObject + " | Returns value:" + getValue() + "]";
+        return "[Line:" + lineNumber + " | Type: return | Return Object:" + returnObject + " | Returns value:" + getValue() + "]";
     }
 
     @Override
@@ -32,6 +32,12 @@ public class ObjectReturn extends IndexedObject{
         if(returnObject != null)
             return returnObject.getValue();
         return "Error: returnObject is not set";
+    }
+
+    @Override
+    public String getType()
+    {
+        return "return";
     }
 
     public int getLineNumber() {

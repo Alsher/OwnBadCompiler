@@ -23,18 +23,27 @@ public class ObjectString extends IndexedObject {
     }
 
     public ObjectString()
-    {}
+    {
+        this.lineNumber = -1;
+        this.name = "ERROR";
+    }
 
     @Override
     public String toString()
     {
-        return "[Line:" + lineNumber + " | Type: string variable | Name:" + name + " | Content:" + content + "]";
+        return "[Line:" + lineNumber + " | Type: String | Name:" + name + " | Content:" + content + "]";
     }
 
     @Override
     public String getValue()
     {
         return content;
+    }
+
+    @Override
+    public String getType()
+    {
+        return "String";
     }
 
     public int getLineNumber() {

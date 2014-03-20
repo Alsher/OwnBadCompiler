@@ -1,28 +1,30 @@
 package com.base;
 
+import com.base.Indexed.IndexedObject;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class MathSystem {
+//TODO: enhance the calculate function
 
-    static ArrayList<Integer> pureInteger;
+public class MathSystem {
 
     public static Integer calculate(ArrayList<String> input) //does currently only work for positive and negative values / + and - operators
     {
         int returnInt = 0;
 
-        pureInteger = new ArrayList<>();
+        ArrayList<Integer> pureInteger = new ArrayList<>();
 
         for(int i = 0; i < input.size(); i++)
         {
             boolean hasAlreadyBeenAdded = false;
-
+            IndexedObject mathObject = ParseSystem.variables.get(input.get(i));
 
             if(input.get(i).equals("-"))
             {
-                if(Parse.variables.get(input.get(i)) != null)
+                if(mathObject != null)
                 {
-                    pureInteger.add(-(Integer)Parse.variables.get(input.get(i + 1)).getValue());
+                    pureInteger.add(-(Integer) ParseSystem.variables.get(input.get(i + 1)).getValue());
                     i++;
                     hasAlreadyBeenAdded = true;
                 }
@@ -34,17 +36,24 @@ public class MathSystem {
                 }
             }
 
-            if(Parse.variables.get(input.get(i)) != null)
-                if((Util.isInteger(Parse.variables.get(input.get(i)).getValue().toString()) || (!Util.isInteger((String)Parse.variables.get(input.get(i)).getValue().toString()) && !Util.isAMathOperator(input.get(i)))) && !hasAlreadyBeenAdded)
-                     pureInteger.add((Integer)Parse.variables.get(input.get(i)).getValue());
-            else
-                if((Util.isInteger(input.get(i)) || (!Util.isInteger(input.get(i)) && !Util.isAMathOperator(input.get(i)))) && !hasAlreadyBeenAdded)
-                    pureInteger.add(Integer.parseInt(input.get(i)));
+            if(mathObject != null)
+               if(mathObject.getType().equals("int") && !hasAlreadyBeenAdded)
+                {
+                    pureInteger.add((Integer)mathObject.getValue());
+                    hasAlreadyBeenAdded = true;
+                }
+               else {
+                   System.err.println("Error: " + mathObject + " is not a mathematical term!");
+                    continue;
+               }
 
+            if((Util.isInteger(input.get(i)) || (!Util.isInteger(input.get(i)) && !Util.isAMathOperator(input.get(i)))) && !hasAlreadyBeenAdded)
+                pureInteger.add(Integer.parseInt(input.get(i)));
         }
 
         for(Integer integ : pureInteger)
             returnInt += integ;
+
         return returnInt;
     }
 

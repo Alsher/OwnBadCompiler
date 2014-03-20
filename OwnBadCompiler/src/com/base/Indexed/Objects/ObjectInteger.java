@@ -24,7 +24,10 @@ public class ObjectInteger extends IndexedObject {
     }
 
     public ObjectInteger()
-    {}
+    {
+        this.lineNumber = -1;
+        this.name = "ERROR";
+    }
 
     public ObjectInteger(String name, IndexedObject object)
     {
@@ -38,13 +41,19 @@ public class ObjectInteger extends IndexedObject {
     @Override
     public String toString()
     {
-        return "[Line:" + lineNumber + " | Type: integer variable | Name:" + name + " | Value:" + intValue + "]";
+        return "[Line:" + lineNumber + " | Type: int | Name:" + name + " | Value:" + intValue + "]";
     }
 
     @Override
     public Integer getValue()
     {
         return intValue;
+    }
+
+    @Override
+    public String getType()
+    {
+        return "int";
     }
 
     public String getName() {

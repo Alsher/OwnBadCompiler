@@ -25,69 +25,76 @@ public class Reader
 
     public Reader(String fileName)
     {
-//        /** index file **/
-//        indexContent(fileName);
-//
-//        /** index methods **/
-//        hashedMethods = Parse.parseMethods(indexedLines);
-//
-//        /** output what we parsed so far **/
-//        for (String key : keys)
-//        {
-//            System.out.println("Indexed methods are: " + hashedMethods.get(key));
-//            System.out.println("Indexed variables are: " + hashedMethods.get(key).getVariables());
-//            System.out.println("Indexed objects are: " + hashedMethods.get(key).getObject());
-//            System.out.println();
-//
-//        }
-
-        startFinal = System.nanoTime();
-
         /** index file **/
-        startTime = System.nanoTime();
         indexContent(fileName);
-        endTime = System.nanoTime();
 
-        stepFinal[0] = endTime - startTime;
+        /** hash the file  without any further calculation **/
+        hashedMethods = HashSystem.hashMethods(indexedLines);
 
+        /** parse methods in hashedMethods **/
+        hashedMethods = ParseSystem.parseMethods(hashedMethods);
 
-        /** index method headers and content **/
-        startTime = System.nanoTime();
-        hashedMethods = Parse.parseMethods(indexedLines);
-        endTime = System.nanoTime();
+        /** check for language mistakes **/
+        //TODO
 
-        stepFinal[1] = endTime - startTime;
+        /** compile | run **/
+        //TODO
 
-        /** check for variable mistakes etc **/
-        //TODO: actually add this
-
-
-        startTime = System.nanoTime();
-
+        /** output what we parsed so far **/
         List<String> keys = new ArrayList<>(hashedMethods.keySet());
         for (String key : keys)
         {
-                System.out.println("Indexed methods are: " + hashedMethods.get(key));
-                System.out.println("Indexed variables are: " + hashedMethods.get(key).getVariables());
-                System.out.println("Indexed objects are: " + hashedMethods.get(key).getObject());
-                System.out.println();
+            System.out.println("Indexed methods are: " + hashedMethods.get(key));
+            System.out.println("Indexed variables are: " + hashedMethods.get(key).getVariables());
+            System.out.println("Indexed objects are: " + hashedMethods.get(key).getObjects());
+            System.out.println();
+
         }
-
-        endTime = System.nanoTime();
-
-        stepFinal[9] = endTime - startTime;
-        endFinal = System.nanoTime();
-
-        System.out.println();
-        System.out.println("Number of lines: " + indexedLines.size());
-        System.out.println();
-
-        System.out.println("The indexing of all lines took " + (stepFinal[0] / (double)1000000) + " ms.");
-        System.out.println("The indexing of all methods took " + (stepFinal[1] / (double)1000000) + " ms.");
-        System.out.println("The output took " + (stepFinal[9] / (double)1000000) + "ms.");
-        System.out.println();
-
-        System.out.println("The whole operation took " + ((endFinal - startFinal) / (double)1000000) + " ms.");
+//
+//        startFinal = System.nanoTime();
+//
+//        /** index file **/
+//        startTime = System.nanoTime();
+//        indexContent(fileName);
+//        endTime = System.nanoTime();
+//
+//        stepFinal[0] = endTime - startTime;
+//
+//
+//        /** index method headers and content **/
+//        startTime = System.nanoTime();
+//        hashedMethods = ParseSystem.parseMethods(indexedLines);
+//        endTime = System.nanoTime();
+//
+//        stepFinal[1] = endTime - startTime;
+//
+//
+//        startTime = System.nanoTime();
+//
+//        List<String> keys = new ArrayList<>(hashedMethods.keySet());
+//        for (String key : keys)
+//        {
+//                System.out.println("Indexed methods are: " + hashedMethods.get(key));
+//                System.out.println("Indexed variables are: " + hashedMethods.get(key).getVariables());
+//                System.out.println("Indexed objects are: " + hashedMethods.get(key).getObjects());
+//                System.out.println();
+//        }
+//
+//        endTime = System.nanoTime();
+//
+//        stepFinal[9] = endTime - startTime;
+//        endFinal = System.nanoTime();
+//
+//        System.out.println();
+//        System.out.println("Number of lines: " + indexedLines.size());
+//        System.out.println();
+//
+//        System.out.println("The indexing of all lines took " + (stepFinal[0] / (double)1000000) + " ms.");
+//        System.out.println("The indexing of all methods took " + (stepFinal[1] / (double)1000000) + " ms.");
+//        System.out.println("The output took " + (stepFinal[9] / (double)1000000) + "ms.");
+//        System.out.println();
+//
+//        System.out.println("The whole operation took " + ((endFinal - startFinal) / (double)1000000) + " ms.");
     }
 
     private void indexContent(String fileName)
@@ -110,7 +117,7 @@ public class Reader
 
             /** add each line to system wide content variable **/
             while((line = reader.readLine()) != null)
-                if(!line.equals(""))
+                if(!line.equals("") && !Util.isCommentedOut(line))
                 {
                     indexedLines.add(new IndexedLine(lineCount, line));
                     lineCount++;

@@ -12,7 +12,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 
 
-public class Parse{
+public class ParseOld {
 
     static ArrayList<IndexedObject> statements = new ArrayList<>();
     static HashMap<String, IndexedObject> variables = new HashMap<>();
@@ -21,7 +21,7 @@ public class Parse{
     public static HashMap<String, IndexedMethod> parseMethods(ArrayList<IndexedLine> content)
     {
         HashMap<String, IndexedMethod>  returnMethods = new HashMap<>();
-        IndexedMethod preReturn = new IndexedMethod();
+        IndexedMethod method = null;
 
         /** find and index method **/
         for(IndexedLine cont : content)
@@ -32,22 +32,24 @@ public class Parse{
             String[] tokens = cont.getLine().split(" ");
             switch(tokens[0])
             {
-                case "-": preReturn = new IndexedMethod(cont.getLineNumber(), Util.removeBrackets(tokens[1]), tokens[2]); break;
+                case "-": method = Util.getMethod(Util.removeBrackets(tokens), cont.getLineNumber()); break;
                 case "+": break; //might me added later
 
                 default: if(Util.isCompleteStatement(tokens)) parseStatement(cont); else System.err.println("Error: \"" + cont.getLine() + "\" is not a complete statement!"); break;
                 case "{": bracePosition.add(cont.getLineNumber()); break; //add the first brace position
                 case "}":
-                    bracePosition.add(cont.getLineNumber());        //add the second brace position
-                    preReturn.setBraceStart(bracePosition.get(0));  //set brace positions in preReturn
-                    preReturn.setBraceEnd(bracePosition.get(1));    //set brace positions in preReturn
-                    preReturn.setObject(statements);                //set statements in preReturn to local statements array
-                    preReturn.setVariables(variables);              //set variables in preReturn to local variable HashMap
+                    if(method != null) {
+                        bracePosition.add(cont.getLineNumber());        //add the second brace position
+                        method.setBraceStart(bracePosition.get(0));  //set brace positions in preReturn
+                        method.setBraceEnd(bracePosition.get(1));    //set brace positions in preReturn
+                        method.setObjects(statements);                //set statements in preReturn to local statements array
+                        method.setVariables(variables);              //set variables in preReturn to local variable HashMap
 
-                    bracePosition = new ArrayList<>();              //clear bracePosition array
-                    statements = new ArrayList<>();                 //clear statements
-                    variables = new HashMap<>();                    //clear variables
-                    returnMethods.put(preReturn.getName(), preReturn);                   //add to returnMethods, may not be necessary
+                        bracePosition = new ArrayList<>();              //clear bracePosition array
+                        statements = new ArrayList<>();                 //clear statements
+                        variables = new HashMap<>();                   //clear variables
+                        returnMethods.put(method.getName(), method);}
+                    method = null;
                     break;
             }
         }

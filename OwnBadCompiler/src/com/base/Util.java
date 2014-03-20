@@ -1,6 +1,9 @@
 package com.base;
 
 import com.base.Indexed.IndexedMethod;
+import com.base.Indexed.Methods.MethodInteger;
+import com.base.Indexed.Methods.MethodString;
+import com.base.Indexed.Methods.MethodVoid;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -66,6 +69,14 @@ public class Util {
                 result += c;
 
         return result;
+    }
+
+    public static String[] removeBrackets(String[] input)
+    {
+        ArrayList<String> list = new ArrayList<>(Arrays.asList(input));
+        list = removeBrackets(list);
+
+        return list.toArray(new String[list.size()]);
     }
 
     public static ArrayList<String> removeBrackets(ArrayList<String> input)
@@ -139,8 +150,18 @@ public class Util {
         if(counter >= line.length())
             return line.substring(markStart, markEnd - 1);
 
-
         return "ERROR: getMarkedString FAILED";
+    }
+
+    public static IndexedMethod getMethod(String[] tokens, int line)
+    {
+        switch(tokens[1])
+        {
+            case "void": return new MethodVoid(line, Util.removeMethodIndicator(tokens[2]));
+            case "int" : return new MethodInteger(line, Util.removeMethodIndicator(tokens[2]));
+            case "String" : return new MethodString(line, Util.removeMethodIndicator(tokens[2]));
+            default: return null;
+        }
     }
 
     public static boolean isCompleteStatement(String[] tokens)
@@ -181,14 +202,6 @@ public class Util {
     public static boolean isMethod(String token)
     {
         return token.length() > 2 && token.substring(token.length() - 2).equals("()");
-    }
-
-    public static boolean isInMethod(ArrayList<IndexedMethod> methods, String name)
-    {
-        for(IndexedMethod method : methods)
-            if(method.getName().equals(name))
-                return true;
-        return false;
     }
 
     public static boolean isCommentedOut(String line)
