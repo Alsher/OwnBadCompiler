@@ -58,12 +58,10 @@ public class ParseSystem {
     {
         ObjectInteger object = new ObjectInteger();
         ArrayList<String> list = new ArrayList<>(Arrays.asList(tokens));
-        list = Util.removeFromTo(list, 0, 2);               //remove everything before the "=" operator, also including the operator
-        list = Util.removeSemicolon(list);                  //remove the semicolon to prevent a nuke in the MathSystem
 
         object.setLineNumber(lineNumber);                   //set line number
         object.setName(tokens[1]);                          //set var name
-        object.setIntValue(MathSystem.calculate(list));     //do the math and add it returnInteger
+        object.setIntValue(MathSystem.calculate(list, 0, 2));     //do the math and add it returnInteger
 
         variables.put(object.getName(), object);
     }
@@ -74,7 +72,7 @@ public class ParseSystem {
 
         object.setLineNumber(lineNumber);                                  //set line number
         object.setName(tokens[1]);                                         //set var name
-        object.setContent(Util.getMarkedString(Arrays.toString(tokens)));  //set content
+        object.setContent(Util.getMarkedString(tokens));  //set content
 
         variables.put(object.getName(), object);
     }

@@ -37,7 +37,7 @@ public class MethodString extends IndexedMethod {
     {}
 
     public String toString() {
-        return "[Head line:" + getHeaderLineNumber() + " Start line:" + braceStart + " | End line:" + braceEnd + " | Method type:" + getType() + " | Name: " + Util.removeMethodIndicator(name) + " | Has content: " + (braceStart != null && braceEnd != null) + "]";
+        return "[Head line:" + getHeaderLineNumber() + " Start line:" + braceStart + " | End line:" + braceEnd + " | Method type:" + getType() + " | Name: " + Util.removeCharacter(name, ':') + " | Has content: " + (braceStart != null && braceEnd != null) + "]";
     }
 
     public void setHeaderLineNumber(int lineNumber) {

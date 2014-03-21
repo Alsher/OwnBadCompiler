@@ -119,8 +119,10 @@ public class Reader
             while((line = reader.readLine()) != null)
                 if(!line.equals("") && !Util.isCommentedOut(line))
                 {
+                    line = Util.removeCharacter(line, '\t'); //remove tabs
                     indexedLines.add(new IndexedLine(lineCount, line));
                     lineCount++;
+                    System.out.println(line);
                 }
         }
         catch(Exception e)

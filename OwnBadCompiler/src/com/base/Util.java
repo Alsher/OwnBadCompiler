@@ -94,16 +94,6 @@ public class Util {
         return returnList;
     }
 
-    public static String removeMethodIndicator(String input)
-    {
-        String result = "";
-        for(Character c : input.toCharArray())
-            if(!c.equals(':'))
-                result += c;
-
-        return result;
-    }
-
     public static String[] removeEmptyStrings(String[] input)
     {
         ArrayList<String> preResult = new ArrayList<>();
@@ -130,8 +120,29 @@ public class Util {
         String[] array = new String[list.size()];
         list.toArray(array);
 
-        System.out.println(Arrays.toString(input) + " | " + Arrays.toString(array));
         return array;
+    }
+
+    public static String removeCharacter(String input, Character removeChar)
+    {
+        String result = "";
+        for(Character c : input.toCharArray())
+            if(!c.equals(removeChar))
+                result += c;
+
+        return result;
+    }
+
+    public static String[] removeCharacter(String input[], Character removeChar)
+    {
+        ArrayList<Character> preResult = new ArrayList<>();
+
+        for(String string : input)
+            for(Character c : string.toCharArray())
+                if(!c.equals(removeChar))
+                    preResult.add(c);
+
+        return new String[]{preResult.toString()};
     }
 
     public static String getMarkedString(String line)
@@ -148,18 +159,24 @@ public class Util {
         }
 
         if(counter >= line.length())
+        {
             return line.substring(markStart, markEnd - 1);
-
+        }
         return "ERROR: getMarkedString FAILED";
+    }
+
+    public static String getMarkedString(String[] tokens)
+    {
+        return getMarkedString(removeCharacter(Arrays.toString(tokens), ','));
     }
 
     public static IndexedMethod getMethod(String[] tokens, int line)
     {
         switch(tokens[1])
         {
-            case "void": return new MethodVoid(line, Util.removeMethodIndicator(tokens[2]));
-            case "int" : return new MethodInteger(line, Util.removeMethodIndicator(tokens[2]));
-            case "String" : return new MethodString(line, Util.removeMethodIndicator(tokens[2]));
+            case "void": return new MethodVoid(line, Util.removeCharacter(tokens[2], ':'));
+            case "int" : return new MethodInteger(line, Util.removeCharacter(tokens[2], ':'));
+            case "String" : return new MethodString(line, Util.removeCharacter(tokens[2], ':'));
             default: return null;
         }
     }

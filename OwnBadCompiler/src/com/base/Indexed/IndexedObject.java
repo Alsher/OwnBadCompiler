@@ -4,6 +4,7 @@ package com.base.Indexed;
     A IndexedObject will be any kind of operation inside a method, such as a new Integer Variable or a if() statement.
     IndexedObject is abstract and therefor an entry point for every single action.
     Every IndexedObject has to override (at least at this point) the toString() method to actually work neatly with a System.out.print[ln]() command.
+    Every IndexedObject also has to have a getValue(), a getLineNumber() and a getType() method overwritten;
 
     The abstract class is used for bundling every object. This allows to easily implement any action into an IndexedStatement without having
     to specify a constructor for every single object.
@@ -14,12 +15,12 @@ package com.base.Indexed;
 
  */
 
-public abstract class IndexedObject<T>
+public abstract class IndexedObject
 {
     //possibility to add a parent system right here
 
     public abstract String toString();
-    public abstract T getValue();
+    public abstract Object getValue();
     public abstract int getLineNumber();
     public abstract String getType();
 }
