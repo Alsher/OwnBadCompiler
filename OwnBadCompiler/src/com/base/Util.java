@@ -7,7 +7,6 @@ import com.base.Indexed.Methods.MethodVoid;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 
 /*
@@ -21,88 +20,26 @@ import java.util.List;
 
 public class Util {
 
-    public static String removeSemicolon(String input)
-    {
-        String result = "";
-        for(Character c : input.toCharArray())
-            if(!c.equals(';'))
-                result += c;
-
-        return result;
-    }
-
-    public static ArrayList<String> removeSemicolon(ArrayList<String> input)
-    {
-        ArrayList<String> returnList = new ArrayList<>();
-
-        for(String string : input)
-        {
-            String result = "";
-            for(Character c : string.toCharArray())
-                if(!c.equals(';'))
-                    result += c;
-            returnList.add(result);
-        }
-        return returnList;
-    }
-
-    public static List<String> removeSemicolon(List<String> input)
-    {
-        ArrayList<String> returnList = new ArrayList<>();
-
-        for(String string : input)
-        {
-            String result = "";
-            for(Character c : string.toCharArray())
-                if(!c.equals(';'))
-                    result += c;
-            returnList.add(result);
-        }
-        return returnList;
-    }
-
     public static String removeBrackets(String input)
     {
-        String result = "";
-        for(Character c : input.toCharArray())
-            if(!c.equals('(') && !c.equals(')'))
-                result += c;
-
-        return result;
+        input = Util.removeCharacter(input, '(');
+        input = Util.removeCharacter(input, ')');
+        return input;
     }
 
     public static String[] removeBrackets(String[] input)
     {
-        ArrayList<String> list = new ArrayList<>(Arrays.asList(input));
-        list = removeBrackets(list);
-
-        return list.toArray(new String[list.size()]);
+        input = Util.removeCharacter(input, '(');
+        input = Util.removeCharacter(input, ')');
+        return input;
     }
 
     public static ArrayList<String> removeBrackets(ArrayList<String> input)
     {
-        ArrayList<String> returnList = new ArrayList<>();
+        input = Util.removeCharacter(input, '(');
+        input = Util.removeCharacter(input, ')');
 
-        for(String string : input)
-        {
-            String result = "";
-            for(Character c : string.toCharArray())
-                if(!c.equals('(') && !c.equals(')'))
-                    result += c;
-            returnList.add(result);
-        }
-        return returnList;
-    }
-
-    public static String[] removeEmptyStrings(String[] input)
-    {
-        ArrayList<String> preResult = new ArrayList<>();
-
-        for(String string : input)
-            if(!string.equals(""))
-                preResult.add(string);
-
-        return new String[]{preResult.toString()};
+        return input;
     }
 
     public static ArrayList<String> removeFromTo(ArrayList<String> input, int start, int end)
@@ -119,7 +56,6 @@ public class Util {
         removeFromTo(list, start, end);
         String[] array = new String[list.size()];
         list.toArray(array);
-
         return array;
     }
 
@@ -129,21 +65,23 @@ public class Util {
         for(Character c : input.toCharArray())
             if(!c.equals(removeChar))
                 result += c;
-
         return result;
     }
 
     public static String[] removeCharacter(String input[], Character removeChar)
     {
-        ArrayList<Character> preResult = new ArrayList<>();
-
-        for(String string : input)
-            for(Character c : string.toCharArray())
-                if(!c.equals(removeChar))
-                    preResult.add(c);
-
-        return new String[]{preResult.toString()};
+        for(int i = 0; i < input.length; i++)
+            input[i] = removeCharacter(input[i], removeChar);
+        return input;
     }
+
+    public static ArrayList<String> removeCharacter(ArrayList<String> input, Character removeChar)
+    {
+        for(int i = 0; i < input.size(); i++)
+            input.set(i, removeCharacter(input.get(i), removeChar));
+        return input;
+    }
+
 
     public static String getMarkedString(String line)
     {
@@ -209,16 +147,6 @@ public class Util {
                 return true;
 
         return false;
-    }
-
-    public static boolean isMethodType(String token)
-    {
-        return token.equals("void") || token.equals("int") || token.equals("ObjectString");
-    }
-
-    public static boolean isMethod(String token)
-    {
-        return token.length() > 2 && token.substring(token.length() - 2).equals("()");
     }
 
     public static boolean isCommentedOut(String line)

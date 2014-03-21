@@ -122,7 +122,7 @@ public class Reader
                     line = Util.removeCharacter(line, '\t'); //remove tabs
                     indexedLines.add(new IndexedLine(lineCount, line));
                     lineCount++;
-                    System.out.println(line);
+                    //System.out.println(line);
                 }
         }
         catch(Exception e)

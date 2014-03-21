@@ -66,14 +66,14 @@ public class MathSystem {
     {
         ArrayList<String> list = new ArrayList<>(Arrays.asList(input));
         list = Util.removeFromTo(list, excludeStart, excludeEnd);
-        list = Util.removeSemicolon(list);
+        list = Util.removeCharacter(list, ';');
         return calculate(list);
     }
 
     public static Integer calculate(ArrayList<String> input, int excludeStart, int excludeEnd)
     {
         input = Util.removeFromTo(input, excludeStart, excludeEnd);
-        input = Util.removeSemicolon(input);
+        input = Util.removeCharacter(input, ';');
         return calculate(input);
     }
 

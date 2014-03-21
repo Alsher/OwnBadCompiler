@@ -81,7 +81,7 @@ public class ParseSystem {
     {
         ObjectReturn object = new ObjectReturn();
 
-        tokens[1] = Util.removeSemicolon(tokens[1]);                //removes semicolon for proper variables.get() call
+        tokens[1] = Util.removeCharacter(tokens[1], ';');                //removes semicolon for proper variables.get() call
 
         object.setLineNumber(lineNumber);
 
