@@ -1,12 +1,12 @@
 package com.base;
 
 import com.base.Indexed.IndexedMethod;
+import com.base.Indexed.IndexedObject;
 import com.base.Indexed.Methods.MethodInteger;
 import com.base.Indexed.Methods.MethodString;
 import com.base.Indexed.Methods.MethodVoid;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.*;
 
 
 /*
@@ -59,6 +59,26 @@ public class Util {
         return array;
     }
 
+    public static String getMarkedString(String line)
+    {
+        int markStart = 0, markEnd = 0, counter = 1;
+
+        for(Character c : line.toCharArray())
+        {
+            if(c.equals('"') && markStart == 0)
+                markStart = counter;
+            else if(c.equals('"') && markStart != 0)
+                markEnd = counter;
+            counter++;
+        }
+
+        if(counter >= line.length())
+        {
+            return line.substring(markStart, markEnd - 1);
+        }
+        return "ERROR: getMarkedString FAILED";
+    }
+
     public static String removeCharacter(String input, Character removeChar)
     {
         String result = "";
@@ -82,27 +102,6 @@ public class Util {
         return input;
     }
 
-
-    public static String getMarkedString(String line)
-    {
-        int markStart = 0, markEnd = 0, counter = 1;
-
-        for(Character c : line.toCharArray())
-        {
-            if(c.equals('"') && markStart == 0)
-                markStart = counter;
-            else if(c.equals('"') && markStart != 0)
-                markEnd = counter;
-            counter++;
-        }
-
-        if(counter >= line.length())
-        {
-            return line.substring(markStart, markEnd - 1);
-        }
-        return "ERROR: getMarkedString FAILED";
-    }
-
     public static String getMarkedString(String[] tokens)
     {
         return getMarkedString(removeCharacter(Arrays.toString(tokens), ','));
@@ -119,6 +118,53 @@ public class Util {
         }
     }
 
+    public static IndexedMethod getMethodByKey(String key, HashMap<String, IndexedMethod> methods)
+    {
+        return methods.get(Util.removeBrackets(key));
+    }
+
+    public static ArrayList<IndexedObject> toSortetArray(ArrayList<IndexedObject> input)
+    {
+        Collections.sort(input, new Comparator<IndexedObject>() {
+
+            public int compare(IndexedObject o1, IndexedObject o2) {
+                return o1.getLineNumber() - o2.getLineNumber();
+            }
+        });
+        return input;
+    }
+
+    public static ArrayList<IndexedObject> toSortetArray(HashMap<String, IndexedObject> input)
+    {
+        ArrayList<IndexedObject> list = new ArrayList<>(input.values());
+
+        Collections.sort(list, new Comparator<IndexedObject>() {
+
+            public int compare(IndexedObject o1, IndexedObject o2) {
+                return o1.getLineNumber() - o2.getLineNumber();
+            }
+        });
+        return list;
+    }
+
+    public static boolean containtsMethodCall(String[] possibleCallTokens, HashMap<String, IndexedMethod> methods)
+    {
+        boolean returnBoolean = false;
+        for(String string : possibleCallTokens)
+            returnBoolean = methods.get(Util.removeBrackets(string)) != null;
+        return returnBoolean;
+    }
+
+    public static boolean isInitedVar(HashMap<String, IndexedObject> variables, String variableName)
+    {
+        return variables.get(variableName) != null;
+    }
+
+    public static boolean isAMethodCall(String possibleCall, HashMap<String, IndexedMethod> methods)
+    {
+        return methods.get(Util.removeBrackets(possibleCall)) != null;
+    }
+
     public static boolean isCompleteStatement(String[] tokens)
     {
         boolean isComplete = false;
@@ -129,6 +175,11 @@ public class Util {
                     isComplete = true;
 
         return isComplete;
+    }
+
+    public static boolean isAReturnMethod(String possibleCall, HashMap<String, IndexedMethod> methods)
+    {
+        return !methods.get(Util.removeBrackets(possibleCall)).getType().equals("void");
     }
 
     public static boolean isInteger(String input)
@@ -146,6 +197,13 @@ public class Util {
             if ((input.charAt(i) == '+' || input.charAt(i) == '-') && input.length() <= 1)
                 return true;
 
+        return false;
+    }
+
+    //TODO: add it
+    public static boolean isAMathOperation(String[] tokens)
+    {
+        for(String string : tokens);
         return false;
     }
 

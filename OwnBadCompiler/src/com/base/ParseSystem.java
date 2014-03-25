@@ -3,6 +3,7 @@ package com.base;
 import com.base.Indexed.IndexedMethod;
 import com.base.Indexed.IndexedObject;
 import com.base.Indexed.Objects.ObjectInteger;
+import com.base.Indexed.Objects.ObjectRaw;
 import com.base.Indexed.Objects.ObjectReturn;
 import com.base.Indexed.Objects.ObjectString;
 
@@ -50,7 +51,7 @@ public class ParseSystem {
             case "String": parseString(tokens, object.getLineNumber()); break;
             case "return": parseReturn(tokens, object.getLineNumber()); break;
 
-            default: parseDefault(tokens, object.getLineNumber()); break;
+            default: parseDefault(Util.removeCharacter(object.getValue().toString(), ';'), object.getLineNumber()); break;
         }
     }
 
@@ -95,15 +96,10 @@ public class ParseSystem {
         objects.add(object);
     }
 
-    private static void parseDefault(String[] tokens, int lineNumber)
+    private static void parseDefault(String content, int lineNumber)
     {
-        IndexedObject object = variables.get(tokens[0]);
-        if(object != null && Util.isInteger(object.getValue().toString()))
-        {
-            ObjectInteger integerObject = new ObjectInteger(tokens[0], variables.get(tokens[0]));
-            integerObject.setIntValue(MathSystem.calculate(tokens, 0, 1));
-            object = integerObject;
-        }
-        objects.add(object);
+        objects.add(new ObjectRaw(lineNumber, content));
     }
+
+
 }

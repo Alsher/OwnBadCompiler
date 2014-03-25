@@ -11,7 +11,7 @@ import java.util.HashMap;
 
 public abstract class IndexedMethod {
 
-    //public abstract void call();
+    public abstract void call();
 
     public abstract String toString();
 

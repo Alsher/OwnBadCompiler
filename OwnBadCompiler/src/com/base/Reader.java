@@ -35,21 +35,23 @@ public class Reader
         hashedMethods = ParseSystem.parseMethods(hashedMethods);
 
         /** check for language mistakes **/
-        //TODO
+        if(ErrorSystem.checkForErrors(hashedMethods) != 1)
+        System.err.println("Error: script contains errors");
 
         /** compile | run **/
-        //TODO
+        else Compiler.compile(hashedMethods);
 
-        /** output what we parsed so far **/
-        List<String> keys = new ArrayList<>(hashedMethods.keySet());
-        for (String key : keys)
-        {
-            System.out.println("Indexed methods are: " + hashedMethods.get(key));
-            System.out.println("Indexed variables are: " + hashedMethods.get(key).getVariables());
-            System.out.println("Indexed objects are: " + hashedMethods.get(key).getObjects());
-            System.out.println();
 
-        }
+//        /** output what we parsed so far **/
+//        List<String> keys = new ArrayList<>(hashedMethods.keySet());
+//        for (String key : keys)
+//        {
+//            System.out.println("Indexed methods are: " + hashedMethods.get(key));
+//            System.out.println("Indexed variables are: " + hashedMethods.get(key).getVariables());
+//            System.out.println("Indexed objects are: " + hashedMethods.get(key).getObjects());
+//            System.out.println();
+//
+//        }
 //
 //        startFinal = System.nanoTime();
 //

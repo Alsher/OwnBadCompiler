@@ -6,11 +6,11 @@ import java.util.HashMap;
 
 public class ErrorSystem {
 
-    public static String checkForErrors(HashMap<String, IndexedMethod> parsedMethods)
+    public static int checkForErrors(HashMap<String, IndexedMethod> parsedMethods)
     {
+        //TODO: add error checks
 
-
-        return "No Error";
+        return 1;
     }
 
 }

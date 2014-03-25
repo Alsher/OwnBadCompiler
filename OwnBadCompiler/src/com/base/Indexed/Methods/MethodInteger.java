@@ -2,7 +2,6 @@ package com.base.Indexed.Methods;
 
 import com.base.Indexed.IndexedMethod;
 import com.base.Indexed.IndexedObject;
-import com.base.Util;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,10 +34,22 @@ public class MethodInteger extends IndexedMethod {
     }
 
     public MethodInteger()
-    {}
+    {
+
+    }
+
+
+    @Override
+    public void call()
+    {
+        /** set return object **/
+        for(IndexedObject object : objects)
+            if(object.getType().equals("return"))
+                setReturnObject(object);
+    }
 
     public String toString() {
-        return "[Head line:" + getHeaderLineNumber() + " Start line:" + braceStart + " | End line:" + braceEnd + " | Method type:" + getType() + " | Name: " + Util.removeCharacter(name, ':') + " | Has content: " + (braceStart != null && braceEnd != null) + "]";
+        return "[Head line:" + getHeaderLineNumber() + " Start line:" + braceStart + " | End line:" + braceEnd + " | Method type:" + getType() + " | Name: " + name + " | Has content: " + (braceStart != null && braceEnd != null) + "]";
     }
 
     public void setHeaderLineNumber(int lineNumber) {
@@ -77,11 +88,12 @@ public class MethodInteger extends IndexedMethod {
     }
 
     public String getName() {
-        return name.substring(0, name.length() - 1);
+        return name;
     }
     public void setName(String name) {
-        this.name = name + ":";
+        this.name = name;
     }
+
 
     public Integer getBraceStart() {
         return braceStart;

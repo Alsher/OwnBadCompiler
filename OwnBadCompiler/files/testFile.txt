@@ -1,20 +1,28 @@
 //first test
 //yay it works
 
+//TODO: add local variables
+
 - (int) main:
 {
-String helloString = "hallo s";
+int stuff = mainInteger + secondMainInteger;
+mainInteger = intReturn();
+
+noReturn();
 }
 
 - (void) noReturn:
 {
-int oneInteger = -40 + 42 - 3 + 2 + 5;
-int methodInteger = oneInteger + 42;
+int int1 = -40 + 42 - 3 + 2 + 5;
+int int2 = int1 + 42;
 }
 
 - (int) intReturn:
 {
-int integer1 = 2;
+int oneInteger = 5;
+int methodInteger = oneInteger + 1;
+
+return methodInteger;
 }
 
 - (String) stringReturn:
