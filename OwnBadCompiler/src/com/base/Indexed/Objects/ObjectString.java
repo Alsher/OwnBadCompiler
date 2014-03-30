@@ -7,6 +7,15 @@ public class ObjectString extends IndexedObject {
     private int lineNumber;
     private String name;
     private String content;
+    private boolean needsCompiler;
+
+    public ObjectString(int lineNumber, String name, String content, boolean needsCompiler)
+    {
+        this.lineNumber = lineNumber;
+        this.name = name;
+        this.content = content;
+        this.needsCompiler = needsCompiler;
+    }
 
     public ObjectString(int lineNumber, String name, String content)
     {
@@ -26,12 +35,13 @@ public class ObjectString extends IndexedObject {
     {
         this.lineNumber = -1;
         this.name = "ERROR";
+        this.needsCompiler = true;
     }
 
     @Override
     public String toString()
     {
-        return "[Line:" + lineNumber + " | Type: String | Name:" + name + " | Content:" + content + "]";
+        return "[Line:" + lineNumber + " | Type: String | Needs to be compiled:" + needsCompiler + " | Name:" + name + " | Content:" + content + "]";
     }
 
     @Override
@@ -61,5 +71,15 @@ public class ObjectString extends IndexedObject {
     }
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public void setNeedsCompiler(boolean needsCompiler)
+    {
+        this.needsCompiler = needsCompiler;
+    }
+
+    public boolean needsCompiler()
+    {
+        return needsCompiler;
     }
 }

@@ -107,7 +107,7 @@ public class MethodString extends IndexedMethod {
 
     public String getType()
     {
-        return "string";
+        return "String";
     }
 
     public IndexedObject getReturnObject()

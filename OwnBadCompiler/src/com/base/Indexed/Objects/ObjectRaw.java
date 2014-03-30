@@ -7,10 +7,13 @@ public class ObjectRaw extends IndexedObject{
     private int lineNumber;
     private String rawContent;
 
+    private boolean needsCompiler;
+
     public ObjectRaw(int lineNumber, String rawContent)
     {
         this.lineNumber = lineNumber;
         this.rawContent = rawContent;
+        this.needsCompiler = true;
     }
 
     public ObjectRaw()
@@ -20,7 +23,7 @@ public class ObjectRaw extends IndexedObject{
 
     @Override
     public String toString() {
-        return "[Line number:" + lineNumber + " | raw content:" + rawContent + "]";
+        return "[Line number:" + lineNumber + " | Needs to be compiled:" + needsCompiler + " | raw content:" + rawContent + "]";
     }
 
     @Override
@@ -49,5 +52,15 @@ public class ObjectRaw extends IndexedObject{
 
     public void setRawContent(String rawContent) {
         this.rawContent = rawContent;
+    }
+
+    public void setNeedsCompiler(boolean needsCompiler)
+    {
+        this.needsCompiler = needsCompiler;
+    }
+
+    public boolean needsCompiler()
+    {
+        return needsCompiler;
     }
 }

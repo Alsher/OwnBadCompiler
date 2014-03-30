@@ -23,4 +23,6 @@ public abstract class IndexedObject
     public abstract Object getValue();
     public abstract int getLineNumber();
     public abstract String getType();
+
+    public abstract boolean needsCompiler();
 }

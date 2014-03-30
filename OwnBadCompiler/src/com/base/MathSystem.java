@@ -11,6 +11,8 @@ public class MathSystem {
 
     public static Integer calculate(ArrayList<String> input) //does currently only work for positive and negative values / + and - operators
     {
+        input = Util.removeCharacter(input, ';');
+
         int returnInt = 0;
 
         ArrayList<Integer> pureInteger = new ArrayList<>();
@@ -59,7 +61,7 @@ public class MathSystem {
 
     public static Integer calculate(String[] input)
     {
-        return calculate(new ArrayList<>(Arrays.asList(input)));
+        return calculate(new ArrayList<>(Arrays.asList(Util.removeCharacter(input, ';'))));
     }
 
     public static Integer calculate(String[] input, int excludeStart, int excludeEnd)

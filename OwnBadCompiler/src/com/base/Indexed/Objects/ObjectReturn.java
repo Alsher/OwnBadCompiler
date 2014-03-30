@@ -7,12 +7,13 @@ public class ObjectReturn extends IndexedObject{
 
     private int lineNumber;
     private IndexedObject returnObject;
-
+    private boolean needsCompiler;
 
     public ObjectReturn(int lineNumber, IndexedObject returnObject)
     {
         this.lineNumber = lineNumber;
         this.returnObject = returnObject;
+        this.needsCompiler = true;
     }
 
     public ObjectReturn()
@@ -23,7 +24,7 @@ public class ObjectReturn extends IndexedObject{
     @Override
     public String toString()
     {
-        return "[Line:" + lineNumber + " | Type: return | Return Object:" + returnObject + " | Returns value:" + getValue() + "]";
+        return "[Line:" + lineNumber + " | Type: return | Needs to be compiled:" + needsCompiler +  "| Return Object:" + returnObject + " | Returns value:" + getValue() + "]";
     }
 
     @Override
@@ -54,5 +55,15 @@ public class ObjectReturn extends IndexedObject{
 
     public void setReturnObject(IndexedObject returnObject) {
         this.returnObject = returnObject;
+    }
+
+    public void setNeedsCompiler(boolean needsCompiler)
+    {
+        this.needsCompiler = needsCompiler;
+    }
+
+    public boolean needsCompiler()
+    {
+        return needsCompiler;
     }
 }

@@ -8,6 +8,7 @@ public class ObjectInteger extends IndexedObject {
     private int lineNumber;
     private String name;
     private int intValue;
+    private boolean needsCompiler;
 
     public ObjectInteger(int line, String name, int intValue)
     {
@@ -27,6 +28,7 @@ public class ObjectInteger extends IndexedObject {
     {
         this.lineNumber = -1;
         this.name = "ERROR";
+        this.needsCompiler = true;
     }
 
     public ObjectInteger(String name, IndexedObject object)
@@ -41,7 +43,7 @@ public class ObjectInteger extends IndexedObject {
     @Override
     public String toString()
     {
-        return "[Line:" + lineNumber + " | Type: int | Name:" + name + " | Value:" + intValue + "]";
+        return "[Line:" + lineNumber + " | Type: int | Needs to be compiled:" + needsCompiler + " | Name:" + name + " | Value:" + intValue + "]";
     }
 
     @Override
@@ -71,5 +73,16 @@ public class ObjectInteger extends IndexedObject {
     }
     public void setIntValue(int intValue) {
         this.intValue = intValue;
+    }
+
+
+    public void setNeedsCompiler(boolean needsCompiler)
+    {
+        this.needsCompiler = needsCompiler;
+    }
+
+    public boolean needsCompiler()
+    {
+        return needsCompiler;
     }
 }

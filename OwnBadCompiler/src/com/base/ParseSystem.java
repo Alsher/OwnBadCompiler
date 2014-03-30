@@ -43,43 +43,63 @@ public class ParseSystem {
 
     private static void parseObject(IndexedObject object)
     {
-        String[] tokens = object.getValue().toString().split(" ");
+        String line = object.getValue().toString();
+        String[] tokens = line.split(" ");
 
         switch(tokens[0])
         {
-            case "int": parseInteger(tokens, object.getLineNumber()); break;
-            case "String": parseString(tokens, object.getLineNumber()); break;
-            case "return": parseReturn(tokens, object.getLineNumber()); break;
+            case "int": parseInteger(line, object.getLineNumber()); break;
+            case "String": parseString(line, object.getLineNumber()); break;
+            case "return": parseReturn(line, object.getLineNumber()); break;
 
             default: parseDefault(Util.removeCharacter(object.getValue().toString(), ';'), object.getLineNumber()); break;
         }
     }
 
-    private static void parseInteger(String[] tokens, int lineNumber)
+    private static void parseInteger(String line, int lineNumber)
     {
+        String[] tokens = line.split(" ");
         ObjectInteger object = new ObjectInteger();
         ArrayList<String> list = new ArrayList<>(Arrays.asList(tokens));
+        list = Util.removeFromTo(list, 0, 2);                     //remove from index 0 to index 2
 
-        object.setLineNumber(lineNumber);                   //set line number
-        object.setName(tokens[1]);                          //set var name
-        object.setIntValue(MathSystem.calculate(list, 0, 2));     //do the math and add it returnInteger
+        object.setLineNumber(lineNumber);                         //set line number
+        object.setName(tokens[1]);                                //set var name
 
-        variables.put(object.getName(), object);
+        if(!Util.containsPossibleMethodCall(tokens))
+        {
+            object.setIntValue(MathSystem.calculate(list));       //do the math and add it returnInteger
+            object.setNeedsCompiler(false);
+            variables.put(object.getName(), object);
+        }
+        else
+            variables.put(object.getName(), new ObjectRaw(object.getLineNumber(), line)); //add raw object to HashMap if the Integer does have a method call
+
+
+
+
     }
 
-    private static void parseString(String[] tokens, int lineNumber)
+    private static void parseString(String line, int lineNumber)
     {
+        String[] tokens = line.split(" ");
         ObjectString object = new ObjectString();
 
         object.setLineNumber(lineNumber);                                  //set line number
         object.setName(tokens[1]);                                         //set var name
-        object.setContent(Util.getMarkedString(tokens));  //set content
-
-        variables.put(object.getName(), object);
+        if(!Util.containsPossibleMethodCall(tokens))
+        {
+            object.setContent(Util.getMarkedString(tokens));       //do the math and add it returnInteger
+            object.setNeedsCompiler(false);
+            variables.put(object.getName(), object);
+        }
+        else
+            variables.put(object.getName(), new ObjectRaw(object.getLineNumber(), line)); //add raw object to HashMap if the Integer does have a method call
     }
 
-    private static void parseReturn(String[] tokens, int lineNumber)
+    private static void parseReturn(String line, int lineNumber)
     {
+        String[] tokens = line.split(" ");
         ObjectReturn object = new ObjectReturn();
 
         tokens[1] = Util.removeCharacter(tokens[1], ';');                //removes semicolon for proper variables.get() call
@@ -93,6 +113,7 @@ public class ParseSystem {
         else
             System.err.println("Error: \"" + tokens[1] + "\" is not an introduced variable!");
 
+        object.setNeedsCompiler(false);
         objects.add(object);
     }
 

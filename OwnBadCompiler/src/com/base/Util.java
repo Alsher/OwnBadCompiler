@@ -44,8 +44,15 @@ public class Util {
 
     public static ArrayList<String> removeFromTo(ArrayList<String> input, int start, int end)
     {
-        for(int i = start; i <= end; i++)
-            input.remove(start);
+        if(end - start != 1)
+            for(int i = start; i <= end; i++) {
+                input.remove(start);
+            }
+        else
+            for(int i = start; i < end; i++) {
+                input.remove(start);
+            }
+
 
         return input;
     }
@@ -147,11 +154,31 @@ public class Util {
         return list;
     }
 
-    public static boolean containtsMethodCall(String[] possibleCallTokens, HashMap<String, IndexedMethod> methods)
+    public static ArrayList<IndexedObject> hashToArray(HashMap<String, IndexedObject> input)
+    {
+        ArrayList<IndexedObject> returnList = new ArrayList<>();
+
+        for (String key : input.keySet()) {
+            returnList.add(input.get(key));
+        }
+
+        return returnList;
+    }
+
+    public static boolean containsMethodCall(String[] possibleCallTokens, HashMap<String, IndexedMethod> methods)
+    {
+        boolean returnBoolean = false;
+
+        for(String string : possibleCallTokens)
+            returnBoolean = methods.get(Util.removeBrackets(string)) != null;
+        return returnBoolean;
+    }
+
+    public static boolean containsPossibleMethodCall(String[] possibleCallTokens)
     {
         boolean returnBoolean = false;
         for(String string : possibleCallTokens)
-            returnBoolean = methods.get(Util.removeBrackets(string)) != null;
+            returnBoolean = string.contains("();");
         return returnBoolean;
     }
 
@@ -177,6 +204,18 @@ public class Util {
         return isComplete;
     }
 
+    public static boolean isVariableIniter(String[] input)
+    {
+        boolean returnBoolean = false;
+        for(String string : input)
+        {
+            if(string.equals("int") || string.equals("String"))
+                returnBoolean =  true;
+        }
+
+        return returnBoolean;
+    }
+
     public static boolean isAReturnMethod(String possibleCall, HashMap<String, IndexedMethod> methods)
     {
         return !methods.get(Util.removeBrackets(possibleCall)).getType().equals("void");
@@ -191,6 +230,15 @@ public class Util {
         return true;
     }
 
+    public static boolean isInteger(ArrayList<String> input)
+    {
+        boolean returnBoolean = false;
+        for(String string : input)
+            returnBoolean = isInteger(string);
+
+        return returnBoolean;
+    }
+
     public static boolean isAMathOperator(String input)
     {
         for (int i = 0; i < input.length(); i++)
@@ -200,12 +248,13 @@ public class Util {
         return false;
     }
 
-    //TODO: add it
-    public static boolean isAMathOperation(String[] tokens)
+
+    public static boolean isAVariableAssignment(String[] tokens)
     {
-        for(String string : tokens);
-        return false;
+        return tokens.length >= 3 && (tokens[1].equals("=") || tokens[2].equals("="));
     }
+
+
 
     public static boolean isCommentedOut(String line)
     {

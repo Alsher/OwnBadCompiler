@@ -5,16 +5,13 @@
 
 - (int) main:
 {
-int stuff = mainInteger + secondMainInteger;
-mainInteger = intReturn();
+int mainInteger = intReturn();
+String mainString = stringReturn();
 
-noReturn();
-}
+String failString = noReturn();
 
-- (void) noReturn:
-{
-int int1 = -40 + 42 - 3 + 2 + 5;
-int int2 = int1 + 42;
+int integer = 0;
+integer = intReturn2();
 }
 
 - (int) intReturn:
@@ -25,8 +22,21 @@ int methodInteger = oneInteger + 1;
 return methodInteger;
 }
 
+- (int) intReturn2:
+{
+int int1 = 10;
+int int2 = int1 + 1;
+
+return int2;
+}
+
 - (String) stringReturn:
 {
 String returnString = "such a cool string";
 return returnString;
+}
+
+- (void) noReturn:
+{
+int integ = 0;
 }
