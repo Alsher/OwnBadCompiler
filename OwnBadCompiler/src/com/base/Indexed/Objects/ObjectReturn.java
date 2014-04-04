@@ -5,6 +5,8 @@ import com.base.Indexed.IndexedObject;
 
 public class ObjectReturn extends IndexedObject{
 
+    private static final String TYPE = "return";
+
     private int lineNumber;
     private IndexedObject returnObject;
     private boolean needsCompiler;
@@ -38,7 +40,7 @@ public class ObjectReturn extends IndexedObject{
     @Override
     public String getType()
     {
-        return "return";
+        return TYPE;
     }
 
     public int getLineNumber() {

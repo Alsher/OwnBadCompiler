@@ -2,6 +2,7 @@ package com.base.Indexed.Methods;
 
 import com.base.Indexed.IndexedMethod;
 import com.base.Indexed.IndexedObject;
+import com.base.Util;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,12 +35,13 @@ public class MethodVoid extends IndexedMethod {
     {}
 
     @Override
-    public void call() {
-
+    public void call()
+    {
+        System.out.println("Method called:" + this);
     }
 
     public String toString() {
-        return "[Head line:" + getHeaderLineNumber() + " Start line:" + braceStart + " | End line:" + braceEnd + " | Method type:" + getType() + " | Name: " + name + " | Has content: " + (braceStart != null && braceEnd != null) + "]";
+        return "[Head line:" + getHeaderLineNumber() + " | Start line:" + braceStart + " | End line:" + braceEnd + " | Method type:" + getType() + " | Name: " + name + " | Has content: " + (braceStart != null && braceEnd != null) + "]";
     }
 
     public void setHeaderLineNumber(int lineNumber) {
@@ -107,4 +109,17 @@ public class MethodVoid extends IndexedMethod {
     {
         return null;
     }
+
+    public ArrayList<IndexedObject> getCombinedObjects()
+    {
+        ArrayList<IndexedObject> combinedObjects = objects;
+        //add the variables to ArrayList
+        combinedObjects.addAll(Util.hashToArray(variables));
+
+        //sort combinedObjects by line number (see Util class)
+        combinedObjects = Util.toSortedArray(combinedObjects);
+
+        return combinedObjects;
+    }
+
 }

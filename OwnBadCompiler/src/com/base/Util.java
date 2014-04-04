@@ -16,6 +16,9 @@ import java.util.*;
 
     The Util method has a loose order: any non-boolean method goes on top, followed by the boolean ones.
     Do pair up methods with the same purpose but different inputs.
+
+    Some Util methods need some work as some of these are somewhat hacked in
+    (See removeFromTo() or isAVariableAssignment())
  */
 
 public class Util {
@@ -38,7 +41,6 @@ public class Util {
     {
         input = Util.removeCharacter(input, '(');
         input = Util.removeCharacter(input, ')');
-
         return input;
     }
 
@@ -52,7 +54,6 @@ public class Util {
             for(int i = start; i < end; i++) {
                 input.remove(start);
             }
-
 
         return input;
     }
@@ -130,7 +131,7 @@ public class Util {
         return methods.get(Util.removeBrackets(key));
     }
 
-    public static ArrayList<IndexedObject> toSortetArray(ArrayList<IndexedObject> input)
+    public static ArrayList<IndexedObject> toSortedArray(ArrayList<IndexedObject> input)
     {
         Collections.sort(input, new Comparator<IndexedObject>() {
 
@@ -141,7 +142,7 @@ public class Util {
         return input;
     }
 
-    public static ArrayList<IndexedObject> toSortetArray(HashMap<String, IndexedObject> input)
+    public static ArrayList<IndexedObject> toSortedArray(HashMap<String, IndexedObject> input)
     {
         ArrayList<IndexedObject> list = new ArrayList<>(input.values());
 
@@ -161,7 +162,6 @@ public class Util {
         for (String key : input.keySet()) {
             returnList.add(input.get(key));
         }
-
         return returnList;
     }
 
@@ -187,7 +187,7 @@ public class Util {
         return variables.get(variableName) != null;
     }
 
-    public static boolean isAMethodCall(String possibleCall, HashMap<String, IndexedMethod> methods)
+    public static boolean isMethodCall(String possibleCall, HashMap<String, IndexedMethod> methods)
     {
         return methods.get(Util.removeBrackets(possibleCall)) != null;
     }
@@ -208,10 +208,9 @@ public class Util {
     {
         boolean returnBoolean = false;
         for(String string : input)
-        {
             if(string.equals("int") || string.equals("String"))
                 returnBoolean =  true;
-        }
+
 
         return returnBoolean;
     }
@@ -253,8 +252,6 @@ public class Util {
     {
         return tokens.length >= 3 && (tokens[1].equals("=") || tokens[2].equals("="));
     }
-
-
 
     public static boolean isCommentedOut(String line)
     {

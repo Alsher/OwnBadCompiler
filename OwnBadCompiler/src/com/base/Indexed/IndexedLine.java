@@ -1,8 +1,6 @@
 package com.base.Indexed;
 
-/**
- * Created by Phil on 28.02.14.
- */
+
 public class IndexedLine {
 
     private String line;

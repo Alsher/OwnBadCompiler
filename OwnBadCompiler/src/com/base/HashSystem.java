@@ -8,16 +8,23 @@ import com.base.Indexed.Objects.ObjectRaw;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/*
+    The HashSystem only scans the file for methods and objects and puts these into a HashMap with String to IndexedMethod
+    As every IndexedMethod itself contains a HashMap with String to IndexedObject, every so-called "raw" object is assigned
+    to its Method.
+    The HashSystem is optimized to be fast and lightweight.
+ */
+
 public class HashSystem {
 
     public static HashMap<String, IndexedMethod> hashMethods(ArrayList<IndexedLine> content)
     {
-        ArrayList<IndexedObject> rawObjects = new ArrayList<>();
-        ArrayList<Integer> bracePosition = new ArrayList<>();
-
         double startTime = System.nanoTime();
 
+        ArrayList<IndexedObject> rawObjects = new ArrayList<>();
+        ArrayList<Integer> bracePosition = new ArrayList<>();
         HashMap<String, IndexedMethod> hashedMethods = new HashMap<>();
+
         IndexedMethod method = null;
 
         for(IndexedLine cont : content)

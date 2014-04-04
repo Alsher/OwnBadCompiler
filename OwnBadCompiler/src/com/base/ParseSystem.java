@@ -12,6 +12,13 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+/*
+    The ParseSystem parses every object in every method provided by the HashSystem.
+    It parses raw objects into non-raw objects, eg ObjectInteger or ObjectString.
+
+    As the Compiler needs to be as fast as possible, the ParseSystem also sets
+    digit-only values to Integers and sets returnValues.
+ */
 
 public class ParseSystem {
 
@@ -20,9 +27,11 @@ public class ParseSystem {
 
     public static HashMap<String, IndexedMethod> parseMethods(HashMap<String, IndexedMethod> input)
     {
-        HashMap<String, IndexedMethod> returnHash = new HashMap<>();
         double startTime = System.nanoTime();
 
+        HashMap<String, IndexedMethod> returnHash = new HashMap<>();
+
+        //access every object in HashMap by its key
         List<String> keys = new ArrayList<>(input.keySet());
         for(String key : keys)
         {
@@ -46,6 +55,7 @@ public class ParseSystem {
         String line = object.getValue().toString();
         String[] tokens = line.split(" ");
 
+        //check for object identifier and parse according to it
         switch(tokens[0])
         {
             case "int": parseInteger(line, object.getLineNumber()); break;
@@ -61,23 +71,19 @@ public class ParseSystem {
         String[] tokens = line.split(" ");
         ObjectInteger object = new ObjectInteger();
         ArrayList<String> list = new ArrayList<>(Arrays.asList(tokens));
-        list = Util.removeFromTo(list, 0, 2);                     //remove from index 0 to index 2
+        list = Util.removeFromTo(list, 0, 2);                   //remove from index 0 to index 2
 
-        object.setLineNumber(lineNumber);                         //set line number
-        object.setName(tokens[1]);                                //set var name
+        object.setLineNumber(lineNumber);                       //set line number
+        object.setName(tokens[1]);                              //set var name
 
-        if(!Util.containsPossibleMethodCall(tokens))
+        if(!Util.containsPossibleMethodCall(tokens))            //check if value is digit-only | contains no possible method call
         {
-            object.setIntValue(MathSystem.calculate(list));       //do the math and add it returnInteger
-            object.setNeedsCompiler(false);
+            object.setIntValue(MathSystem.calculate(list));     //do the math and add it returnInteger
+            object.setNeedsCompiler(false);                     //flag the object as non-compiling
             variables.put(object.getName(), object);
         }
         else
             variables.put(object.getName(), new ObjectRaw(object.getLineNumber(), line)); //add raw object to HashMap if the Integer does have a method call
-
-
-
-
     }
 
     private static void parseString(String line, int lineNumber)
@@ -85,12 +91,12 @@ public class ParseSystem {
         String[] tokens = line.split(" ");
         ObjectString object = new ObjectString();
 
-        object.setLineNumber(lineNumber);                                  //set line number
-        object.setName(tokens[1]);                                         //set var name
+        object.setLineNumber(lineNumber);                        //set line number
+        object.setName(tokens[1]);                               //set var name
         if(!Util.containsPossibleMethodCall(tokens))
         {
-            object.setContent(Util.getMarkedString(tokens));       //do the math and add it returnInteger
-            object.setNeedsCompiler(false);
+            object.setContent(Util.getMarkedString(tokens));     //set content to everything in side  "[..]"
+            object.setNeedsCompiler(false);                      //flag the object as non-compiling
             variables.put(object.getName(), object);
         }
         else
@@ -102,18 +108,18 @@ public class ParseSystem {
         String[] tokens = line.split(" ");
         ObjectReturn object = new ObjectReturn();
 
-        tokens[1] = Util.removeCharacter(tokens[1], ';');                //removes semicolon for proper variables.get() call
+        tokens[1] = Util.removeCharacter(tokens[1], ';');          //removes semicolon for proper variables.get() call
 
         object.setLineNumber(lineNumber);
 
-        IndexedObject variableName = variables.get(tokens[1]);      //create a local indexedObject to prevent unnecessary variables.get() call
+        IndexedObject variableName = variables.get(tokens[1]);     //create a local indexedObject to prevent unnecessary variables.get() call
 
-        if(variableName != null)                                    //checks for an invalid variable name
+        if(variableName != null)                                   //checks for an invalid variable name
             object.setReturnObject(variableName);
         else
             System.err.println("Error: \"" + tokens[1] + "\" is not an introduced variable!");
 
-        object.setNeedsCompiler(false);
+        object.setNeedsCompiler(false);                            //flag the object as non-compiling
         objects.add(object);
     }
 

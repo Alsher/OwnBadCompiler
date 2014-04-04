@@ -2,12 +2,15 @@ package com.base.Indexed.Methods;
 
 import com.base.Indexed.IndexedMethod;
 import com.base.Indexed.IndexedObject;
+import com.base.Util;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 
 public class MethodInteger extends IndexedMethod {
+
+    private static final String TYPE = "int";
 
     private int headerLineNumber;
     private String name;
@@ -38,7 +41,6 @@ public class MethodInteger extends IndexedMethod {
 
     }
 
-
     @Override
     public void call()
     {
@@ -49,7 +51,7 @@ public class MethodInteger extends IndexedMethod {
     }
 
     public String toString() {
-        return "[Head line:" + getHeaderLineNumber() + " Start line:" + braceStart + " | End line:" + braceEnd + " | Method type:" + getType() + " | Name: " + name + " | Has content: " + (braceStart != null && braceEnd != null) + "]";
+        return "[Head line:" + getHeaderLineNumber() + " | Start line:" + braceStart + " | End line:" + braceEnd + " | Method type:" + getType() + " | Name: " + name + " | Has content: " + (braceStart != null && braceEnd != null) + "]";
     }
 
     public void setHeaderLineNumber(int lineNumber) {
@@ -111,7 +113,7 @@ public class MethodInteger extends IndexedMethod {
 
     public String getType()
     {
-        return "int";
+        return TYPE;
     }
 
     public IndexedObject getReturnObject()
@@ -121,5 +123,22 @@ public class MethodInteger extends IndexedMethod {
     public void setReturnObject(IndexedObject returnObject)
     {
         this.returnObject = returnObject;
+    }
+
+    public ArrayList<IndexedObject> getCombinedObjects()
+    {
+        ArrayList<IndexedObject> combinedObjects = objects;
+
+        //add the variables to ArrayList
+        combinedObjects.addAll(Util.hashToArray(variables));
+
+        //check for returnObject and add it to the ArrayList
+        if (returnObject != null)
+            combinedObjects.add(returnObject);
+
+        //sort combinedObjects by line number (see Util class)
+        combinedObjects = Util.toSortedArray(combinedObjects);
+
+        return combinedObjects;
     }
 }

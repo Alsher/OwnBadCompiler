@@ -8,10 +8,10 @@
 int mainInteger = intReturn();
 String mainString = stringReturn();
 
-String failString = noReturn();
-
 int integer = 0;
 integer = intReturn2();
+
+noReturn();
 }
 
 - (int) intReturn:

@@ -5,6 +5,8 @@ import com.base.Indexed.IndexedObject;
 
 public class ObjectInteger extends IndexedObject {
 
+    private static final String TYPE = "int";
+
     private int lineNumber;
     private String name;
     private int intValue;
@@ -43,7 +45,7 @@ public class ObjectInteger extends IndexedObject {
     @Override
     public String toString()
     {
-        return "[Line:" + lineNumber + " | Type: int | Needs to be compiled:" + needsCompiler + " | Name:" + name + " | Value:" + intValue + "]";
+        return "[Line:" + lineNumber + " | Type: "+ getType() + " | Needs to be compiled:" + needsCompiler + " | Name:" + name + " | Value:" + intValue + "]";
     }
 
     @Override
@@ -55,7 +57,7 @@ public class ObjectInteger extends IndexedObject {
     @Override
     public String getType()
     {
-        return "int";
+        return TYPE;
     }
 
     public String getName() {

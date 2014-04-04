@@ -4,6 +4,8 @@ import com.base.Indexed.IndexedObject;
 
 public class ObjectRaw extends IndexedObject{
 
+    private static final String TYPE = "raw";
+
     private int lineNumber;
     private String rawContent;
 
@@ -23,7 +25,7 @@ public class ObjectRaw extends IndexedObject{
 
     @Override
     public String toString() {
-        return "[Line number:" + lineNumber + " | Needs to be compiled:" + needsCompiler + " | raw content:" + rawContent + "]";
+        return "[Line:" + lineNumber + " | Type: " + getType() + " | Needs to be compiled:" + needsCompiler + " | raw content:" + rawContent + "]";
     }
 
     @Override
@@ -39,7 +41,7 @@ public class ObjectRaw extends IndexedObject{
     @Override
     public String getType()
     {
-        return "raw";
+        return TYPE;
     }
 
     public void setLineNumber(int lineNumber) {

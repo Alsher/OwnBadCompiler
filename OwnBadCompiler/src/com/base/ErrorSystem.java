@@ -4,8 +4,9 @@ import com.base.Indexed.IndexedMethod;
 
 import java.util.HashMap;
 
-public class ErrorSystem {
+//not finished
 
+public class ErrorSystem {
 
 
     public static int checkForErrors(HashMap<String, IndexedMethod> parsedMethods)
