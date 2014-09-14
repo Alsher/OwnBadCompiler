@@ -40,19 +40,16 @@ public class ObjectString extends IndexedObject {
         this.needsCompiler = true;
     }
 
-    @Override
     public String toString()
     {
         return "[Line:" + lineNumber + " | Type: " + getType() + " | Needs to be compiled:" + needsCompiler + " | Name:" + name + " | Content:" + content + "]";
     }
 
-    @Override
     public String getValue()
     {
         return content;
     }
 
-    @Override
     public String getType()
     {
         return TYPE;

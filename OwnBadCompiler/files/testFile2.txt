@@ -1,0 +1,18 @@
+- (void) main:
+{
+int i = method() + 3;
+String s2 = smethod();
+String string = "hello world";
+
+action out smethod() method() asd;
+}
+- (int) method:
+{
+int returnI = 2 + 3;
+return returnI;
+}
+- (String) smethod:
+{
+String returnS = "bla";
+return returnS;
+}

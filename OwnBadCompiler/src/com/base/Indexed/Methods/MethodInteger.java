@@ -1,5 +1,6 @@
 package com.base.Indexed.Methods;
 
+import com.base.Indexed.IndexedAction;
 import com.base.Indexed.IndexedMethod;
 import com.base.Indexed.IndexedObject;
 import com.base.Util;
@@ -17,28 +18,24 @@ public class MethodInteger extends IndexedMethod {
     private Integer braceStart, braceEnd;
     private ArrayList<IndexedObject> objects;
     private HashMap<String, IndexedObject> variables;
+    private ArrayList<IndexedAction> actions;
     private IndexedObject returnObject;
-
-    public MethodInteger(int headerLineNumber, String name, int braceStart, int braceEnd, ArrayList<IndexedObject> objects, HashMap<String, IndexedObject> variables, IndexedObject returnObject)
-    {
-        this.headerLineNumber = headerLineNumber;
-        this.name = name;
-        this.braceStart = braceStart;
-        this.braceEnd = braceEnd;
-        this.objects = objects;
-        this.variables = variables;
-        this.returnObject = returnObject;
-    }
 
     public MethodInteger(int headerLineNumber, String name)
     {
         this.headerLineNumber = headerLineNumber;
         this.name = name;
+
+        objects = new ArrayList<>();
+        actions = new ArrayList<>();
+        variables = new HashMap<>();
     }
 
     public MethodInteger()
     {
-
+        objects = new ArrayList<>();
+        actions = new ArrayList<>();
+        variables = new HashMap<>();
     }
 
     @Override
@@ -51,7 +48,8 @@ public class MethodInteger extends IndexedMethod {
     }
 
     public String toString() {
-        return "[Head line:" + getHeaderLineNumber() + " | Start line:" + braceStart + " | End line:" + braceEnd + " | Method type:" + getType() + " | Name: " + name + " | Has content: " + (braceStart != null && braceEnd != null) + "]";
+        return "[Head line:" + getHeaderLineNumber() + " | Start line:" + braceStart + " | End line:" + braceEnd + " | Method type:" + getType() +
+               " | Name: " + name + " | Has content: " + (braceStart != null && braceEnd != null) + " | returns: " + (returnObject != null ? returnObject.getValue() : "null") + "]";
     }
 
     public void setHeaderLineNumber(int lineNumber) {
@@ -64,7 +62,7 @@ public class MethodInteger extends IndexedMethod {
     public ArrayList<IndexedObject> getObjects() {
         return objects;
     }
-    public IndexedObject getVariablesWithKey(String name) {
+    public IndexedObject getVariable(String name) {
         return variables.get(name);
     }
 
@@ -82,10 +80,21 @@ public class MethodInteger extends IndexedMethod {
         objects.add(object);
     }
 
+    public ArrayList<IndexedAction> getActions() {
+        return actions;
+    }
+
+    public void setActions(ArrayList<IndexedAction> actions) {
+        this.actions = actions;
+    }
+    public void addAction(IndexedAction action) {
+        this.actions.add(action);
+    }
+
     public void setVariables(HashMap<String, IndexedObject> variables) {
         this.variables = variables;
     }
-    public void setVariable(String name, IndexedObject variable) {
+    public void addVariable(String name, IndexedObject variable) {
         variables.put(name, variable);
     }
 
@@ -95,7 +104,6 @@ public class MethodInteger extends IndexedMethod {
     public void setName(String name) {
         this.name = name;
     }
-
 
     public Integer getBraceStart() {
         return braceStart;

@@ -7,6 +7,8 @@ import com.base.Indexed.Methods.MethodString;
 import com.base.Indexed.Methods.MethodVoid;
 
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 /*
@@ -110,6 +112,13 @@ public class Util {
         return input;
     }
 
+    public static String removeCharacters(String input, Character... values)
+    {
+        for(char v : values)
+            input = removeCharacter(input, v);
+        return input;
+    }
+
     public static String getMarkedString(String[] tokens)
     {
         return getMarkedString(removeCharacter(Arrays.toString(tokens), ','));
@@ -155,6 +164,21 @@ public class Util {
         return list;
     }
 
+    public static String toUsefullString(ArrayList<String> input)
+    {
+        return Util.removeCharacters(input.toString(), ',');
+    }
+
+    public static String toUsefullString(String[] input)
+    {
+        return Util.removeCharacters(Arrays.toString(input), '[', ']', ',');
+    }
+
+    public static String toUsefullString(int[] input)
+    {
+        return Util.removeCharacters(Arrays.toString(input), '[', ']', ',');
+    }
+
     public static ArrayList<IndexedObject> hashToArray(HashMap<String, IndexedObject> input)
     {
         ArrayList<IndexedObject> returnList = new ArrayList<>();
@@ -174,12 +198,20 @@ public class Util {
         return returnBoolean;
     }
 
-    public static boolean containsPossibleMethodCall(String[] possibleCallTokens)
+    public static boolean containsNonMathType(String input)
     {
-        boolean returnBoolean = false;
-        for(String string : possibleCallTokens)
-            returnBoolean = string.contains("();");
-        return returnBoolean;
+        Pattern p = Pattern.compile("[a-zA-Z]");
+        Matcher m = p.matcher(input);
+//        System.out.println("CNMT: " + input  + " | " + m.find());
+        return m.find();
+    }
+
+    public static int getEqualOperator(ArrayList<String> content)
+    {
+        for(int i = 0; i < content.size(); i++)
+            if(content.get(i).contains("="))
+                return i;
+        return 0;
     }
 
     public static boolean isInitedVar(HashMap<String, IndexedObject> variables, String variableName)
@@ -187,9 +219,9 @@ public class Util {
         return variables.get(variableName) != null;
     }
 
-    public static boolean isMethodCall(String possibleCall, HashMap<String, IndexedMethod> methods)
+    public static boolean isMethodCall(String input)
     {
-        return methods.get(Util.removeBrackets(possibleCall)) != null;
+        return Compiler.methods.get(Util.removeCharacters(input, '[', '(', ')', ']')) != null;
     }
 
     public static boolean isCompleteStatement(String[] tokens)
@@ -217,7 +249,7 @@ public class Util {
 
     public static boolean isAReturnMethod(String possibleCall, HashMap<String, IndexedMethod> methods)
     {
-        return !methods.get(Util.removeBrackets(possibleCall)).getType().equals("void");
+        return possibleCall.endsWith(")") && methods.get(Util.removeBrackets(possibleCall)) != null && !methods.get(Util.removeBrackets(possibleCall)).getType().equals("void");
     }
 
     public static boolean isInteger(String input)
@@ -227,6 +259,15 @@ public class Util {
                 return false;
 
         return true;
+    }
+
+    public static boolean isInteger(String[] input)
+    {
+        boolean returnBoolean = false;
+        for(String string : input)
+            returnBoolean = isInteger(string);
+
+        return returnBoolean;
     }
 
     public static boolean isInteger(ArrayList<String> input)

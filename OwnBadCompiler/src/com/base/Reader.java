@@ -9,9 +9,8 @@ import java.io.FileReader;
 import java.util.*;
 
 /*
-    The Reader is the entry point for the whole class as it runs everything right from the constructor.
-    The startTime, endTime etc. is all for performance testing. The console will tell you the speed of
-    the program in ms.
+    The Reader is the entry point for the whole program as it runs everything right from the constructor.
+    The startTime, endTime etc. is for performance testing. The console will output the time in ms.
 */
 
 public class Reader
@@ -31,12 +30,8 @@ public class Reader
         /** parse methods in hashedMethods **/
         hashedMethods = ParseSystem.parseMethods(hashedMethods);
 
-        /** check for language mistakes **/
-        if(ErrorSystem.checkForErrors(hashedMethods) != 1)
-        System.err.println("Error: script contains errors");
-
         /** compile | run **/
-        else Compiler.compile(hashedMethods);
+        Compiler.compile(hashedMethods);
     }
 
     private void indexContent(String fileName)
@@ -58,14 +53,13 @@ public class Reader
             int lineCount = 1;
 
             /** add each line to system wide content variable **/
-            while((line = reader.readLine()) != null)
-                if(!line.equals("") && !Util.isCommentedOut(line))
-                {
-                    line = Util.removeCharacter(line, '\t'); //remove tabs
+            while((line = reader.readLine()) != null) {
+                if (!line.equals("") && !Util.isCommentedOut(line)) {
+                    line = Util.removeCharacters(line, '\t'); //remove tabs
                     indexedLines.add(new IndexedLine(lineCount, line));
-                    lineCount++;
-                    //System.out.println(line);
                 }
+                lineCount++;
+            }
         }
         catch(Exception e)
         {

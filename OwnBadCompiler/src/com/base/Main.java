@@ -13,7 +13,7 @@ public class Main
     {
         double starttime, endtime;
 
-        int iterations = 10;
+        int iterations = 0;
 
         //warm-up for better benchmarking, set iteration to 0 to prevent console spam
         for (int i=0; i<iterations; i++)
@@ -30,7 +30,7 @@ public class Main
     private static void doStuff()
     {
         System.out.println("### Starting reader ###"); System.out.println();
-        Reader reader = new Reader("testFile.txt");
+        Reader reader = new Reader("testFile2.txt");
 
         reader.destroy();
         System.out.println();

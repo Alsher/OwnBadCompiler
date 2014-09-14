@@ -44,6 +44,8 @@ public class HashSystem {
                         method.setBraceEnd(bracePosition.get(1));       //set brace positions in preReturn
                         method.setObjects(rawObjects);                  //set methods empty Object-Set to rawObjects
 
+                        method.setVariables(new HashMap<>());
+
                         bracePosition = new ArrayList<>();              //clear bracePosition array
                         rawObjects = new ArrayList<>();                 //clear rawObjects
                         hashedMethods.put(method.getName(), method);
@@ -51,7 +53,7 @@ public class HashSystem {
                     break;
             }
         }
-        System.out.println("HashSystem preReturn takes: " + (System.nanoTime() - startTime)/(double)1000000 + "ms.");
+        System.out.println("HashSystem took " + (System.nanoTime() - startTime)/(double)1000000 + "ms.");
         return hashedMethods;
     }
 }

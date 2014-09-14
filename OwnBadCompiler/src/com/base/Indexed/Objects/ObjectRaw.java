@@ -28,17 +28,14 @@ public class ObjectRaw extends IndexedObject{
         return "[Line:" + lineNumber + " | Type: " + getType() + " | Needs to be compiled:" + needsCompiler + " | raw content:" + rawContent + "]";
     }
 
-    @Override
     public Object getValue() {
-        return rawContent;
+        return getRawContent();
     }
 
-    @Override
     public int getLineNumber() {
         return lineNumber;
     }
 
-    @Override
     public String getType()
     {
         return TYPE;

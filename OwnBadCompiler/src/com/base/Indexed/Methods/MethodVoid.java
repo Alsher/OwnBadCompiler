@@ -1,5 +1,6 @@
 package com.base.Indexed.Methods;
 
+import com.base.Indexed.IndexedAction;
 import com.base.Indexed.IndexedMethod;
 import com.base.Indexed.IndexedObject;
 import com.base.Util;
@@ -13,26 +14,25 @@ public class MethodVoid extends IndexedMethod {
     private String name;
     private Integer braceStart, braceEnd;
     private ArrayList<IndexedObject> objects;
+    private ArrayList<IndexedAction> actions;
     private HashMap<String, IndexedObject> variables;
-
-    public MethodVoid(int headerLineNumber, String name, int braceStart, int braceEnd, ArrayList<IndexedObject> objects, HashMap<String, IndexedObject> variables)
-    {
-        this.headerLineNumber = headerLineNumber;
-        this.name = name;
-        this.braceStart = braceStart;
-        this.braceEnd = braceEnd;
-        this.objects = objects;
-        this.variables = variables;
-    }
 
     public MethodVoid(int headerLineNumber, String name)
     {
         this.headerLineNumber = headerLineNumber;
         this.name = name;
+
+        objects = new ArrayList<>();
+        actions = new ArrayList<>();
+        variables = new HashMap<>();
     }
 
     public MethodVoid()
-    {}
+    {
+        objects = new ArrayList<>();
+        actions = new ArrayList<>();
+        variables = new HashMap<>();
+    }
 
     @Override
     public void call()
@@ -41,7 +41,8 @@ public class MethodVoid extends IndexedMethod {
     }
 
     public String toString() {
-        return "[Head line:" + getHeaderLineNumber() + " | Start line:" + braceStart + " | End line:" + braceEnd + " | Method type:" + getType() + " | Name: " + name + " | Has content: " + (braceStart != null && braceEnd != null) + "]";
+        return "[Head line:" + getHeaderLineNumber() + " | Start line:" + braceStart + " | End line:" + braceEnd + " | Method type:" + getType() +
+               " | Name: " + name + " | Has content: " + (braceStart != null && braceEnd != null) + "]";
     }
 
     public void setHeaderLineNumber(int lineNumber) {
@@ -54,7 +55,7 @@ public class MethodVoid extends IndexedMethod {
     public ArrayList<IndexedObject> getObjects() {
         return objects;
     }
-    public IndexedObject getVariablesWithKey(String name) {
+    public IndexedObject getVariable(String name) {
         return variables.get(name);
     }
 
@@ -72,10 +73,21 @@ public class MethodVoid extends IndexedMethod {
         objects.add(object);
     }
 
+    public ArrayList<IndexedAction> getActions() {
+        return actions;
+    }
+
+    public void setActions(ArrayList<IndexedAction> actions) {
+        this.actions = actions;
+    }
+    public void addAction(IndexedAction action) {
+        this.actions.add(action);
+    }
+
     public void setVariables(HashMap<String, IndexedObject> variables) {
         this.variables = variables;
     }
-    public void setVariable(String name, IndexedObject variable) {
+    public void addVariable(String name, IndexedObject variable) {
         variables.put(name, variable);
     }
 
@@ -109,6 +121,10 @@ public class MethodVoid extends IndexedMethod {
     {
         return null;
     }
+    public void setReturnObject(IndexedObject returnObject)
+    {
+        return;
+    }
 
     public ArrayList<IndexedObject> getCombinedObjects()
     {
@@ -121,5 +137,4 @@ public class MethodVoid extends IndexedMethod {
 
         return combinedObjects;
     }
-
 }

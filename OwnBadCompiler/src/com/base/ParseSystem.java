@@ -1,5 +1,6 @@
 package com.base;
 
+import com.base.Indexed.Actions.ActionOut;
 import com.base.Indexed.IndexedMethod;
 import com.base.Indexed.IndexedObject;
 import com.base.Indexed.Objects.ObjectInteger;
@@ -8,9 +9,7 @@ import com.base.Indexed.Objects.ObjectReturn;
 import com.base.Indexed.Objects.ObjectString;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 
 /*
     The ParseSystem parses every object in every method provided by the HashSystem.
@@ -22,35 +21,30 @@ import java.util.List;
 
 public class ParseSystem {
 
-    static ArrayList<IndexedObject> objects = new ArrayList<>();
-    static HashMap<String, IndexedObject> variables = new HashMap<>();
+    static ArrayList<IndexedObject> objectArrayList = new ArrayList<>();
 
     public static HashMap<String, IndexedMethod> parseMethods(HashMap<String, IndexedMethod> input)
     {
         double startTime = System.nanoTime();
-
         HashMap<String, IndexedMethod> returnHash = new HashMap<>();
 
-        //access every object in HashMap by its key
-        List<String> keys = new ArrayList<>(input.keySet());
-        for(String key : keys)
+        //iterate through input accessed by input.values()
+        for(IndexedMethod method : input.values())
         {
-            IndexedMethod methods = input.get(key);
-            for(IndexedObject object : input.get(key).getObjects())
-                parseObject(object);
+            for(IndexedObject object : method.getObjects())
+                parseObject(method, object);
 
-            methods.setObjects(objects);                //add parsed Objects (parsed by the parseObject() hierarchy
-            methods.setVariables(variables);            //add parsed Variables (parsed by the parseObject() hierarchy
-            returnHash.put(methods.getName(), methods); //add everything to the returnHash
-            objects = new ArrayList<>();                //clear objects ArrayList
-            variables = new HashMap<>();                //clear variables HashMap
+            method.setObjects(objectArrayList);          //add parsed Objects to current method
+
+            returnHash.put(method.getName(), method);    //add everything to the returnHash
+            objectArrayList = new ArrayList<>();         //clear objects ArrayList
         }
 
-        System.out.println("ParseSystem preReturn takes: " + (System.nanoTime() - startTime)/(double)1000000 + "ms.");
+        System.out.println("ParseSystem took " + (System.nanoTime() - startTime)/(double)1000000 + "ms.");
         return returnHash;
     }
 
-    private static void parseObject(IndexedObject object)
+    private static void parseObject(IndexedMethod rootMethod, IndexedObject object)
     {
         String line = object.getValue().toString();
         String[] tokens = line.split(" ");
@@ -58,52 +52,59 @@ public class ParseSystem {
         //check for object identifier and parse according to it
         switch(tokens[0])
         {
-            case "int": parseInteger(line, object.getLineNumber()); break;
-            case "String": parseString(line, object.getLineNumber()); break;
-            case "return": parseReturn(line, object.getLineNumber()); break;
+            case "int":   parseInteger(rootMethod, line, object.getLineNumber()); break;
+            case "String": parseString(rootMethod, line, object.getLineNumber()); break;
+            case "return": parseReturn(rootMethod, line, object.getLineNumber()); break;
+            case "action": parseAction(rootMethod, line, object.getLineNumber()); break;
 
             default: parseDefault(Util.removeCharacter(object.getValue().toString(), ';'), object.getLineNumber()); break;
         }
     }
 
-    private static void parseInteger(String line, int lineNumber)
+    private static void parseInteger(IndexedMethod rootMethod, String line, int lineNumber)
     {
         String[] tokens = line.split(" ");
         ObjectInteger object = new ObjectInteger();
-        ArrayList<String> list = new ArrayList<>(Arrays.asList(tokens));
-        list = Util.removeFromTo(list, 0, 2);                   //remove from index 0 to index 2
 
         object.setLineNumber(lineNumber);                       //set line number
         object.setName(tokens[1]);                              //set var name
 
-        if(!Util.containsPossibleMethodCall(tokens))            //check if value is digit-only | contains no possible method call
+        if(!Util.containsNonMathType(Util.removeCharacters(Util.toUsefullString(tokens), ';', '[', ']')))            //check if value is digit-only | contains no possible method call
         {
-            object.setIntValue(MathSystem.calculate(list));     //do the math and add it returnInteger
-            object.setNeedsCompiler(false);                     //flag the object as non-compiling
-            variables.put(object.getName(), object);
+            object.setIntValue(MathSystem.calculate(rootMethod, tokens, false));     //do the math and add it returnInteger
+            object.setNeedsCompiler(false);                                        //flag the object as non-compiling
+            rootMethod.getVariables().put(object.getName(), object);
         }
         else
-            variables.put(object.getName(), new ObjectRaw(object.getLineNumber(), line)); //add raw object to HashMap if the Integer does have a method call
+        {
+            object.setStringValue(Util.removeCharacters(Util.toUsefullString(tokens), '[', ']')); //add ObjectInteger with complete line as StringValue
+            rootMethod.addVariable(object.getName(), object);
+        }
+        objectArrayList.add(object);
     }
 
-    private static void parseString(String line, int lineNumber)
+    private static void parseString(IndexedMethod rootMethod, String line, int lineNumber)
     {
         String[] tokens = line.split(" ");
         ObjectString object = new ObjectString();
 
         object.setLineNumber(lineNumber);                        //set line number
         object.setName(tokens[1]);                               //set var name
-        if(!Util.containsPossibleMethodCall(tokens))
+        if(!line.contains("()"))
         {
-            object.setContent(Util.getMarkedString(tokens));     //set content to everything in side  "[..]"
+            object.setContent(Util.getMarkedString(tokens));     //set content to everything in side  ".."
             object.setNeedsCompiler(false);                      //flag the object as non-compiling
-            variables.put(object.getName(), object);
+            rootMethod.getVariables().put(object.getName(), object); //add to rootMethod
         }
         else
-            variables.put(object.getName(), new ObjectRaw(object.getLineNumber(), line)); //add raw object to HashMap if the Integer does have a method call
+        {
+            object.setContent(Util.removeCharacters(Util.toUsefullString(tokens), '[', ']')); //add ObjectString with complete line as context
+            rootMethod.addVariable(object.getName(), object);                                 //will be compiled later
+        }
+        objectArrayList.add(object);
     }
 
-    private static void parseReturn(String line, int lineNumber)
+    private static void parseReturn(IndexedMethod rootMethod, String line, int lineNumber)
     {
         String[] tokens = line.split(" ");
         ObjectReturn object = new ObjectReturn();
@@ -112,21 +113,67 @@ public class ParseSystem {
 
         object.setLineNumber(lineNumber);
 
-        IndexedObject variableName = variables.get(tokens[1]);     //create a local indexedObject to prevent unnecessary variables.get() call
+        IndexedObject variable = rootMethod.getVariables().get(tokens[1]);     //create a local indexedObject to prevent unnecessary variables.get() call
 
-        if(variableName != null)                                   //checks for an invalid variable name
-            object.setReturnObject(variableName);
+        if(variable != null && !variable.needsCompiler())
+        {
+            object.setReturnObject(variable);
+            object.setNeedsCompiler(false);
+        }
         else
-            System.err.println("Error: \"" + tokens[1] + "\" is not an introduced variable!");
+        {
+            object.setContent(line);
+            object.setNeedsCompiler(true);
+        }
 
-        object.setNeedsCompiler(false);                            //flag the object as non-compiling
-        objects.add(object);
+        rootMethod.setReturnObject(object);
+        objectArrayList.add(object);
+    }
+
+    private static void parseAction(IndexedMethod rootMethod, String line, int lineNumber)
+    {
+        String[] tokens = line.split(" ");
+
+        switch (tokens[1])
+        {
+            case "out": parseActionOut(rootMethod, tokens, lineNumber);
+
+            default: break;
+        }
+    }
+
+    private static void parseActionOut(IndexedMethod rootMethod, String[] tokens, int lineNumber)
+    {
+        ActionOut action = new ActionOut();
+
+        action.setLineNumber(lineNumber);
+
+        String[] parameter = new String[tokens.length - 2];
+
+        for(int i = 2; i < tokens.length; i++)
+        {
+            String s = tokens[i];
+
+            if(s.endsWith(";"))
+                s = Util.removeCharacter(s, ';');
+
+            if (rootMethod.getVariables().get(s) != null)
+            {
+                parameter[i - 2] = s;
+            }
+            else if(s.startsWith("\"") && s.endsWith("\""))
+                parameter[i - 2] = Util.removeCharacter(s, '"');
+            else
+                parameter[i - 2] = s;
+
+        }
+
+        action.setParameter(parameter);
+        rootMethod.addAction(action);
     }
 
     private static void parseDefault(String content, int lineNumber)
     {
-        objects.add(new ObjectRaw(lineNumber, content));
+        objectArrayList.add(new ObjectRaw(lineNumber, content));
     }
-
-
 }

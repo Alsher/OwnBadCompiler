@@ -10,6 +10,7 @@ public class ObjectInteger extends IndexedObject {
     private int lineNumber;
     private String name;
     private int intValue;
+    private String stringValue; //needed for storing uncompiled values
     private boolean needsCompiler;
 
     public ObjectInteger(int line, String name, int intValue)
@@ -33,28 +34,18 @@ public class ObjectInteger extends IndexedObject {
         this.needsCompiler = true;
     }
 
-    public ObjectInteger(String name, IndexedObject object)
-    {
-        this.name = name;
-        this.lineNumber = object.getLineNumber();
-
-        try { this.intValue = (Integer)object.getValue(); } //this can fail due to object being a string or not value
-        catch(Exception e) { e.printStackTrace(); }
-    }
-
     @Override
     public String toString()
     {
-        return "[Line:" + lineNumber + " | Type: "+ getType() + " | Needs to be compiled:" + needsCompiler + " | Name:" + name + " | Value:" + intValue + "]";
+        return "[Line:" + lineNumber + " | Type: "+ getType() + " | Needs to be compiled:" + needsCompiler + " | Name:" + name
+                + (stringValue == null ? (" | Value:" + intValue) : (" | Value:" + intValue + " | StringValue: " + stringValue)) + "]";
     }
 
-    @Override
     public Integer getValue()
     {
-        return intValue;
+        return getIntValue();
     }
 
-    @Override
     public String getType()
     {
         return TYPE;
@@ -77,6 +68,14 @@ public class ObjectInteger extends IndexedObject {
         this.intValue = intValue;
     }
 
+    public String getStringValue()
+    {
+        return stringValue;
+    }
+    public void setStringValue(String stringValue)
+    {
+        this.stringValue = stringValue;
+    }
 
     public void setNeedsCompiler(boolean needsCompiler)
     {

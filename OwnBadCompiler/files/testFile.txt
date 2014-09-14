@@ -1,8 +1,3 @@
-//first test
-//yay it works
-
-//TODO: add local variables
-
 - (int) main:
 {
 int mainInteger = intReturn();
@@ -11,13 +6,14 @@ String mainString = stringReturn();
 int integer = 0;
 integer = intReturn2();
 
-noReturn();
+intReturn();
 }
 
 - (int) intReturn:
 {
 int oneInteger = 5;
 int methodInteger = oneInteger + 1;
+int testInteger = 2 + 42 - 1 + 2;
 
 return methodInteger;
 }
@@ -34,9 +30,4 @@ return int2;
 {
 String returnString = "such a cool string";
 return returnString;
-}
-
-- (void) noReturn:
-{
-int integ = 0;
 }

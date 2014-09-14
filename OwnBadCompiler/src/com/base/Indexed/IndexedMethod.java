@@ -12,6 +12,9 @@ import java.util.HashMap;
 
 public abstract class IndexedMethod {
 
+    public HashMap<String, IndexedObject> variables;
+    public ArrayList<IndexedAction> actions;
+
     public abstract void call();
 
     public abstract String toString();
@@ -28,20 +31,25 @@ public abstract class IndexedMethod {
     public abstract HashMap<String, IndexedObject> getVariables();
 
     public abstract IndexedObject getObjectAt(int index);
-    public abstract IndexedObject getVariablesWithKey(String name);
+    public abstract IndexedObject getVariable(String name);
 
     public abstract void setObjects(ArrayList<IndexedObject> objects);
     public abstract void addObject(IndexedObject object);
 
     public abstract void setVariables(HashMap<String, IndexedObject> variables);
-    public abstract void setVariable(String name, IndexedObject variable);
+    public abstract void addVariable(String name, IndexedObject variable);
+
+    public abstract ArrayList<IndexedAction> getActions();
+
+    public abstract void setActions(ArrayList<IndexedAction> actions);
+    public abstract void addAction(IndexedAction action);
 
     public abstract String getType();
     public abstract String getName();
 
+    public abstract void setReturnObject(IndexedObject returnObject);
     public abstract IndexedObject getReturnObject();
 
     public abstract ArrayList<IndexedObject> getCombinedObjects();
-
 }
 

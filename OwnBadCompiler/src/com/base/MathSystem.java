@@ -1,82 +1,92 @@
 package com.base;
 
+import com.base.Indexed.IndexedMethod;
 import com.base.Indexed.IndexedObject;
+import com.base.Indexed.Objects.ObjectInteger;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
 //TODO: enhance the calculate function
 
 public class MathSystem {
 
-    public static Integer calculate(ArrayList<String> input) //does currently only work for positive and negative values / + and - operators
+    public static Integer calculate(IndexedMethod rootMethod, ArrayList<String> components, boolean containsMethodCall) //does currently only work for positive and negative values / + and - operators
     {
-        input = Util.removeCharacter(input, ';');
+        int equalOpPos = Util.getEqualOperator(components);
+        String equalop = components.get(equalOpPos);
+//        System.out.println("MS: " + components + equalop);
 
-        int returnInt = 0;
+        components = Util.removeFromTo(components, 0, equalOpPos);
 
-        ArrayList<Integer> pureInteger = new ArrayList<>();
+        HashMap<String, IndexedObject> variables = rootMethod.getVariables();
 
-        for(int i = 0; i < input.size(); i++)
+        components = Util.removeCharacter(components, ';');
+
+        String[] parsedComponents = new String[components.size()];
+
+        //iterate through component list
+        for(int i = 0; i < components.size(); i++)
         {
-            boolean hasAlreadyBeenAdded = false;
-            IndexedObject mathObject = ParseSystem.variables.get(input.get(i));
+            String component = components.get(i);
 
-            if(input.get(i).equals("-"))
-            {
-                if(mathObject != null)
-                {
-                    pureInteger.add(-(Integer) ParseSystem.variables.get(input.get(i + 1)).getValue());
-                    i++;
-                    hasAlreadyBeenAdded = true;
-                }
-                else
-                {
-                    pureInteger.add(-Integer.parseInt(input.get(i + 1)));
-                    i++;
-                    hasAlreadyBeenAdded = true;
-                }
-            }
+            /** check if component is valid integer **/
+            if(Util.isInteger(component))
+                parsedComponents[i] = component;
 
-            if(mathObject != null)
-               if(mathObject.getType().equals("int") && !hasAlreadyBeenAdded)
-                {
-                    pureInteger.add((Integer)mathObject.getValue());
-                    hasAlreadyBeenAdded = true;
-                }
-               else {
-                   System.err.println("Error: " + mathObject + " is not a mathematical term!");
-                    continue;
-               }
+            /** if not, check if mathematical operator **/
+            else if(Util.isAMathOperator(component))
+                parsedComponents[i] = component;
 
-            if((Util.isInteger(input.get(i)) || (!Util.isInteger(input.get(i)) && !Util.isAMathOperator(input.get(i)))) && !hasAlreadyBeenAdded)
-                pureInteger.add(Integer.parseInt(input.get(i)));
+            /** if not, check if component is valid variable **/
+            else if(variables.get(component) != null &&
+                    variables.get(component) instanceof ObjectInteger)
+                parsedComponents[i] = ((ObjectInteger) variables.get(component)).getValue().toString();
+
+            /** if not, check if component is  method call **/
+            else if(containsMethodCall && Util.isMethodCall(component))
+                parsedComponents[i] = Compiler.methods.get(Util.removeCharacters(component, '[', '(', ')', ']')).getReturnObject().getValue().toString();
         }
 
-        for(Integer integ : pureInteger)
-            returnInt += integ;
-
-        return returnInt;
+        return calculationEngine(parsedComponents);
     }
 
-    public static Integer calculate(String[] input)
+    public static Integer calculate(IndexedMethod rootMethod, String components, boolean containsMethodCall)
     {
-        return calculate(new ArrayList<>(Arrays.asList(Util.removeCharacter(input, ';'))));
+        ArrayList<String> componentList = new ArrayList<>(Arrays.asList(components.split(" ")));
+        return calculate(rootMethod, componentList, containsMethodCall);
     }
 
-    public static Integer calculate(String[] input, int excludeStart, int excludeEnd)
+    public static Integer calculate(IndexedMethod rootMethod, String[] components, boolean containsMethodCall)
     {
-        ArrayList<String> list = new ArrayList<>(Arrays.asList(input));
-        list = Util.removeFromTo(list, excludeStart, excludeEnd);
-        list = Util.removeCharacter(list, ';');
-        return calculate(list);
+        ArrayList<String> componentList = new ArrayList<>(Arrays.asList(Util.toUsefullString(components).split(" ")));
+        return calculate(rootMethod, componentList, containsMethodCall);
     }
 
-    public static Integer calculate(ArrayList<String> input, int excludeStart, int excludeEnd)
+    public static Integer simpleCalculate(ArrayList<String> input)
     {
-        input = Util.removeFromTo(input, excludeStart, excludeEnd);
-        input = Util.removeCharacter(input, ';');
-        return calculate(input);
+        return Integer.parseInt(Util.removeCharacters(Util.toUsefullString(input), ';', '[', ']'));
     }
 
+    private static Integer calculationEngine(String[] input)
+    {
+        int result = 0;
+
+        for(int i = 0; i < input.length; i++)
+        {
+            if(Util.isInteger(input[i]))
+                result += Integer.parseInt(input[i]);
+            else if(input[i].equals("-")) {
+                result -= Integer.parseInt(input[i + 1]);
+                i++;
+            }
+            else if(input[i].equals("+")) {
+                result += Integer.parseInt(input[i + 1]);
+                i++;
+            }
+        }
+
+        return result;
+    }
 }
