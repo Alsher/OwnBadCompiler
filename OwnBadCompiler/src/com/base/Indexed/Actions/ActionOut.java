@@ -3,10 +3,6 @@ package com.base.Indexed.Actions;
 import com.base.Indexed.IndexedAction;
 import com.base.Util;
 
-/**
- * Created by Phil on 14.09.14.
- */
-
 public class ActionOut extends IndexedAction
 {
     private static final String TYPE = "action";
@@ -27,11 +23,11 @@ public class ActionOut extends IndexedAction
 
     public void call()
     {
-        System.out.println("Action called: " + Util.toUsefullString(getParameter()));
+        System.out.println("Action called: " + Util.toUsefulString(getParameter()));
     }
 
     public String toString() {
-        return "[Line: " + lineNumber + " | parameters: " + Util.toUsefullString(parameter) + "]";
+        return "[Line: " + lineNumber + " | parameters: " + Util.toUsefulString(parameter) + "]";
     }
 
     public String[] getParameter() {

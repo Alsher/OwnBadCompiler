@@ -19,8 +19,6 @@ public class HashSystem {
 
     public static HashMap<String, IndexedMethod> hashMethods(ArrayList<IndexedLine> content)
     {
-        double startTime = System.nanoTime();
-
         ArrayList<IndexedObject> rawObjects = new ArrayList<>();
         ArrayList<Integer> bracePosition = new ArrayList<>();
         HashMap<String, IndexedMethod> hashedMethods = new HashMap<>();
@@ -32,7 +30,7 @@ public class HashSystem {
             String[] tokens = cont.getLine().split(" ");
             switch(tokens[0])
             {
-                case "-": method = Util.getMethod(Util.removeBrackets(tokens), cont.getLineNumber()); break;
+                case "-": method = Util.getMethod(Util.removeCharacters(tokens, '(', ')'), cont.getLineNumber()); break;
 
                 default: rawObjects.add(new ObjectRaw(cont.getLineNumber(), cont.getLine())); break;
                 case "{": bracePosition.add(cont.getLineNumber()); break; //add the first brace position
@@ -53,7 +51,6 @@ public class HashSystem {
                     break;
             }
         }
-        System.out.println("HashSystem took " + (System.nanoTime() - startTime)/(double)1000000 + "ms.");
         return hashedMethods;
     }
 }

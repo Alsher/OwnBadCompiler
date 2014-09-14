@@ -25,7 +25,6 @@ public class ParseSystem {
 
     public static HashMap<String, IndexedMethod> parseMethods(HashMap<String, IndexedMethod> input)
     {
-        double startTime = System.nanoTime();
         HashMap<String, IndexedMethod> returnHash = new HashMap<>();
 
         //iterate through input accessed by input.values()
@@ -39,8 +38,6 @@ public class ParseSystem {
             returnHash.put(method.getName(), method);    //add everything to the returnHash
             objectArrayList = new ArrayList<>();         //clear objects ArrayList
         }
-
-        System.out.println("ParseSystem took " + (System.nanoTime() - startTime)/(double)1000000 + "ms.");
         return returnHash;
     }
 
@@ -69,7 +66,7 @@ public class ParseSystem {
         object.setLineNumber(lineNumber);                       //set line number
         object.setName(tokens[1]);                              //set var name
 
-        if(!Util.containsNonMathType(Util.removeCharacters(Util.toUsefullString(tokens), ';', '[', ']')))            //check if value is digit-only | contains no possible method call
+        if(!Util.containsNonMathType(Util.removeCharacters(Util.toUsefulString(tokens), ';', '[', ']')))            //check if value is digit-only | contains no possible method call
         {
             object.setIntValue(MathSystem.calculate(rootMethod, tokens, false));     //do the math and add it returnInteger
             object.setNeedsCompiler(false);                                        //flag the object as non-compiling
@@ -77,7 +74,7 @@ public class ParseSystem {
         }
         else
         {
-            object.setStringValue(Util.removeCharacters(Util.toUsefullString(tokens), '[', ']')); //add ObjectInteger with complete line as StringValue
+            object.setStringValue(Util.removeCharacters(Util.toUsefulString(tokens), '[', ']')); //add ObjectInteger with complete line as StringValue
             rootMethod.addVariable(object.getName(), object);
         }
         objectArrayList.add(object);
@@ -98,7 +95,7 @@ public class ParseSystem {
         }
         else
         {
-            object.setContent(Util.removeCharacters(Util.toUsefullString(tokens), '[', ']')); //add ObjectString with complete line as context
+            object.setContent(Util.removeCharacters(Util.toUsefulString(tokens), '[', ']')); //add ObjectString with complete line as context
             rootMethod.addVariable(object.getName(), object);                                 //will be compiled later
         }
         objectArrayList.add(object);

@@ -15,7 +15,7 @@ public class MathSystem {
     public static Integer calculate(IndexedMethod rootMethod, ArrayList<String> components, boolean containsMethodCall) //does currently only work for positive and negative values / + and - operators
     {
         int equalOpPos = Util.getEqualOperator(components);
-        String equalop = components.get(equalOpPos);
+//        String equalop = components.get(equalOpPos);
 //        System.out.println("MS: " + components + equalop);
 
         components = Util.removeFromTo(components, 0, equalOpPos);
@@ -60,13 +60,13 @@ public class MathSystem {
 
     public static Integer calculate(IndexedMethod rootMethod, String[] components, boolean containsMethodCall)
     {
-        ArrayList<String> componentList = new ArrayList<>(Arrays.asList(Util.toUsefullString(components).split(" ")));
+        ArrayList<String> componentList = new ArrayList<>(Arrays.asList(Util.toUsefulString(components).split(" ")));
         return calculate(rootMethod, componentList, containsMethodCall);
     }
 
     public static Integer simpleCalculate(ArrayList<String> input)
     {
-        return Integer.parseInt(Util.removeCharacters(Util.toUsefullString(input), ';', '[', ']'));
+        return Integer.parseInt(Util.removeCharacters(Util.toUsefulString(input), ';', '[', ']'));
     }
 
     private static Integer calculationEngine(String[] input)

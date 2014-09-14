@@ -11,30 +11,32 @@ public class Main
 
     public static void main(String[] args)
     {
-        double starttime, endtime;
+        String absolutePath = "";
+        if(args.length > 0)
+            absolutePath = args[0];
 
-        int iterations = 0;
+//        int iterations = 0;
+//
+//        //warm-up for better benchmarking, set iteration to 0 to prevent console spam
+//        for (int i=0; i<iterations; i++)
+//            exec();
 
-        //warm-up for better benchmarking, set iteration to 0 to prevent console spam
-        for (int i=0; i<iterations; i++)
-            doStuff();
+        double start = System.nanoTime();
+        exec(absolutePath);
 
-        starttime = System.nanoTime();
-        doStuff();
-        endtime = System.nanoTime();
-
-        System.out.println("This operation took " + ((endtime - starttime) / (double)1000000) + " ms.");
-
+        System.out.println("This operation took " + ((System.nanoTime() - start) / (double)1000000) + " ms.");
     }
 
-    private static void doStuff()
+    private static void exec(String path)
     {
-        System.out.println("### Starting reader ###"); System.out.println();
-        Reader reader = new Reader("testFile2.txt");
+        System.out.println("### Starting reader ###" + (char)10);
 
-        reader.destroy();
-        System.out.println();
-        System.out.println("### Stopping reader ###");
+        if(!path.equals(""))
+            Reader.read(path);
+        else
+            Reader.read("testFile2.txt");
+
+        System.out.println((char)10 + "### Stopping reader ###");
     }
 
 }

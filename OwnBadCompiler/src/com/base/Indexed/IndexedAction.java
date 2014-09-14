@@ -1,8 +1,5 @@
 package com.base.Indexed;
 
-/**
- * Created by Phil on 14.09.14.
- */
 /*
     Every Action has the following syntax: action 'type' 'parameter[]'
  */

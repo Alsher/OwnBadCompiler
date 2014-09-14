@@ -15,26 +15,42 @@ import java.util.*;
 
 public class Reader
 {
-    private ArrayList<IndexedLine> indexedLines = new ArrayList<>();
+    private static ArrayList<IndexedLine> indexedLines = new ArrayList<>();
 
     private static HashMap<String, IndexedMethod> hashedMethods = new HashMap<>();
 
-    public Reader(String fileName)
+    public static void read(String fileName)
     {
+        double value[] = new double[4];
+
         /** index file **/
+        double start = System.nanoTime();
         indexContent(fileName);
+        value[0] = (System.nanoTime() - start)/(double)1000000;
+        System.out.println("indexing took " + value[0] + "ms.");
 
         /** hash the file  without any further calculation **/
+        start = System.nanoTime();
         hashedMethods = HashSystem.hashMethods(indexedLines);
+        value[1] = (System.nanoTime() - start)/(double)1000000;
+        System.out.println("hashing took " + value[1] + "ms.");
 
         /** parse methods in hashedMethods **/
+        start = System.nanoTime();
         hashedMethods = ParseSystem.parseMethods(hashedMethods);
+        value[2] = (System.nanoTime() - start)/(double)1000000;
+        System.out.println("parsing took " + value[2] + "ms.");
 
         /** compile | run **/
+        start = System.nanoTime();
         Compiler.compile(hashedMethods);
+        value[3] = (System.nanoTime() - start)/(double)1000000;
+        System.out.println("compiling took " + value[3] + "ms.");
+
+        System.out.println("Total: " + (value[0] + value[1] + value[2] + value[3]));
     }
 
-    private void indexContent(String fileName)
+    private static void indexContent(String fileName)
     {
         String[] splitArray = fileName.split("\\.");
         String extension = splitArray[splitArray.length - 1]; //get file extension
@@ -47,54 +63,30 @@ public class Reader
 
         try
         {
-            BufferedReader reader = new BufferedReader((new FileReader("./files/" + fileName)));
+            BufferedReader reader;
+            if(fileName.startsWith("/"))
+                reader = new BufferedReader((new FileReader(fileName)));
+            else
+                reader = new BufferedReader((new FileReader("./files/" + fileName)));
             String line;
 
             int lineCount = 1;
 
             /** add each line to system wide content variable **/
             while((line = reader.readLine()) != null) {
-                if (!line.equals("") && !Util.isCommentedOut(line)) {
+                if (!line.equals("") && !line.startsWith("//")) {
                     line = Util.removeCharacters(line, '\t'); //remove tabs
                     indexedLines.add(new IndexedLine(lineCount, line));
                 }
                 lineCount++;
             }
+            reader.close();
         }
         catch(Exception e)
         {
             e.printStackTrace();
             System.exit(-1);
         }
-    }
 
-    public void destroy()
-    {
-        indexedLines = null;
-        hashedMethods = null;
-
-        //more to be added in the future
-    }
-
-
-    public ArrayList<IndexedLine> getIndexedLines() {
-        return indexedLines;
-    }
-    public void setIndexedLines(ArrayList<IndexedLine> indexedLines) {
-        this.indexedLines = indexedLines;
-    }
-
-    public static HashMap<String, IndexedMethod> getHashedMethods() {
-        return hashedMethods;
-    }
-    public static void setHashedMethods(HashMap<String, IndexedMethod> hashedMethods) {
-        Reader.hashedMethods = hashedMethods;
-    }
-
-    public static void addMethod(String name, IndexedMethod method) {
-        hashedMethods.put(name, method);
-    }
-    public static IndexedMethod getMethod(String name) {
-        return hashedMethods.get(name);
     }
 }

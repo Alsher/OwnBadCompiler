@@ -132,21 +132,4 @@ public class MethodInteger extends IndexedMethod {
     {
         this.returnObject = returnObject;
     }
-
-    public ArrayList<IndexedObject> getCombinedObjects()
-    {
-        ArrayList<IndexedObject> combinedObjects = objects;
-
-        //add the variables to ArrayList
-        combinedObjects.addAll(Util.hashToArray(variables));
-
-        //check for returnObject and add it to the ArrayList
-        if (returnObject != null)
-            combinedObjects.add(returnObject);
-
-        //sort combinedObjects by line number (see Util class)
-        combinedObjects = Util.toSortedArray(combinedObjects);
-
-        return combinedObjects;
-    }
 }

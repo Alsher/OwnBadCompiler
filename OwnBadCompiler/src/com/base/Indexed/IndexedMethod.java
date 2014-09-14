@@ -49,7 +49,5 @@ public abstract class IndexedMethod {
 
     public abstract void setReturnObject(IndexedObject returnObject);
     public abstract IndexedObject getReturnObject();
-
-    public abstract ArrayList<IndexedObject> getCombinedObjects();
 }
 

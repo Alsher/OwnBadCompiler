@@ -123,18 +123,6 @@ public class MethodVoid extends IndexedMethod {
     }
     public void setReturnObject(IndexedObject returnObject)
     {
-        return;
-    }
 
-    public ArrayList<IndexedObject> getCombinedObjects()
-    {
-        ArrayList<IndexedObject> combinedObjects = objects;
-        //add the variables to ArrayList
-        combinedObjects.addAll(Util.hashToArray(variables));
-
-        //sort combinedObjects by line number (see Util class)
-        combinedObjects = Util.toSortedArray(combinedObjects);
-
-        return combinedObjects;
     }
 }

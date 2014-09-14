@@ -8,9 +8,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
-/**
- * Created by Phil on 07.09.14.
- */
 public class StringSystem
 {
 
@@ -19,7 +16,7 @@ public class StringSystem
         ArrayList<String> components = new ArrayList<>(Arrays.asList(content.split(" ")));
 
         int equalOpPos = Util.getEqualOperator(components);
-        String equalop = components.get(equalOpPos);
+//        String equalop = components.get(equalOpPos);
 //        System.out.println("SS: " + components + equalop);
 
         components = Util.removeFromTo(components, 0, equalOpPos);
@@ -45,6 +42,6 @@ public class StringSystem
                 parsedComponents[i] = Compiler.methods.get(Util.removeCharacters(component, '[', '(', ')', ']')).getReturnObject().getValue().toString();
         }
 
-        return Util.toUsefullString(parsedComponents);
+        return Util.toUsefulString(parsedComponents);
     }
 }

@@ -34,8 +34,6 @@ public class Compiler {
 
     public static void compile(HashMap<String, IndexedMethod> inputHash)
     {
-        double startTime = System.nanoTime();
-
         //make inputHash available for other methods
         methods = inputHash;
 
@@ -66,8 +64,6 @@ public class Compiler {
                 System.out.println("Action: " + action);
             System.out.println();
         }
-
-        System.out.println("Compiler takes: " + (System.nanoTime() - startTime)/(double)1000000 + "ms.");
     }
 
     private static void compileObject(IndexedMethod rootMethod, Object object)

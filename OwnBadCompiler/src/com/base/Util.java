@@ -19,32 +19,10 @@ import java.util.regex.Pattern;
     The Util method has a loose order: any non-boolean method goes on top, followed by the boolean ones.
     Do pair up methods with the same purpose but different inputs.
 
-    Some Util methods need some work as some of these are somewhat hacked in
-    (See removeFromTo() or isAVariableAssignment())
+    Some Util methods need some work as some of these are somewhat a hack
  */
 
 public class Util {
-
-    public static String removeBrackets(String input)
-    {
-        input = Util.removeCharacter(input, '(');
-        input = Util.removeCharacter(input, ')');
-        return input;
-    }
-
-    public static String[] removeBrackets(String[] input)
-    {
-        input = Util.removeCharacter(input, '(');
-        input = Util.removeCharacter(input, ')');
-        return input;
-    }
-
-    public static ArrayList<String> removeBrackets(ArrayList<String> input)
-    {
-        input = Util.removeCharacter(input, '(');
-        input = Util.removeCharacter(input, ')');
-        return input;
-    }
 
     public static ArrayList<String> removeFromTo(ArrayList<String> input, int start, int end)
     {
@@ -86,7 +64,7 @@ public class Util {
         {
             return line.substring(markStart, markEnd - 1);
         }
-        return "ERROR: getMarkedString FAILED";
+        return null;
     }
 
     public static String removeCharacter(String input, Character removeChar)
@@ -119,6 +97,14 @@ public class Util {
         return input;
     }
 
+    public static String[] removeCharacters(String[] input, Character... values)
+    {
+        for(int i = 0; i < input.length; i++)
+            for(char v : values)
+                input[i] = removeCharacter(input[i], v);
+        return input;
+    }
+
     public static String getMarkedString(String[] tokens)
     {
         return getMarkedString(removeCharacter(Arrays.toString(tokens), ','));
@@ -135,46 +121,17 @@ public class Util {
         }
     }
 
-    public static IndexedMethod getMethodByKey(String key, HashMap<String, IndexedMethod> methods)
-    {
-        return methods.get(Util.removeBrackets(key));
-    }
-
-    public static ArrayList<IndexedObject> toSortedArray(ArrayList<IndexedObject> input)
-    {
-        Collections.sort(input, new Comparator<IndexedObject>() {
-
-            public int compare(IndexedObject o1, IndexedObject o2) {
-                return o1.getLineNumber() - o2.getLineNumber();
-            }
-        });
-        return input;
-    }
-
-    public static ArrayList<IndexedObject> toSortedArray(HashMap<String, IndexedObject> input)
-    {
-        ArrayList<IndexedObject> list = new ArrayList<>(input.values());
-
-        Collections.sort(list, new Comparator<IndexedObject>() {
-
-            public int compare(IndexedObject o1, IndexedObject o2) {
-                return o1.getLineNumber() - o2.getLineNumber();
-            }
-        });
-        return list;
-    }
-
-    public static String toUsefullString(ArrayList<String> input)
+    public static String toUsefulString(ArrayList<String> input)
     {
         return Util.removeCharacters(input.toString(), ',');
     }
 
-    public static String toUsefullString(String[] input)
+    public static String toUsefulString(String[] input)
     {
         return Util.removeCharacters(Arrays.toString(input), '[', ']', ',');
     }
 
-    public static String toUsefullString(int[] input)
+    public static String toUsefulString(int[] input)
     {
         return Util.removeCharacters(Arrays.toString(input), '[', ']', ',');
     }
@@ -187,15 +144,6 @@ public class Util {
             returnList.add(input.get(key));
         }
         return returnList;
-    }
-
-    public static boolean containsMethodCall(String[] possibleCallTokens, HashMap<String, IndexedMethod> methods)
-    {
-        boolean returnBoolean = false;
-
-        for(String string : possibleCallTokens)
-            returnBoolean = methods.get(Util.removeBrackets(string)) != null;
-        return returnBoolean;
     }
 
     public static boolean containsNonMathType(String input)
@@ -214,42 +162,15 @@ public class Util {
         return 0;
     }
 
-    public static boolean isInitedVar(HashMap<String, IndexedObject> variables, String variableName)
-    {
-        return variables.get(variableName) != null;
-    }
-
     public static boolean isMethodCall(String input)
     {
         return Compiler.methods.get(Util.removeCharacters(input, '[', '(', ')', ']')) != null;
     }
 
-    public static boolean isCompleteStatement(String[] tokens)
-    {
-        boolean isComplete = false;
-
-        for(String string : tokens)
-            for(Character c : string.toCharArray())
-                if(c.equals(';'))
-                    isComplete = true;
-
-        return isComplete;
-    }
-
-    public static boolean isVariableIniter(String[] input)
-    {
-        boolean returnBoolean = false;
-        for(String string : input)
-            if(string.equals("int") || string.equals("String"))
-                returnBoolean =  true;
-
-
-        return returnBoolean;
-    }
-
     public static boolean isAReturnMethod(String possibleCall, HashMap<String, IndexedMethod> methods)
     {
-        return possibleCall.endsWith(")") && methods.get(Util.removeBrackets(possibleCall)) != null && !methods.get(Util.removeBrackets(possibleCall)).getType().equals("void");
+        String modifiedString = Util.removeCharacters(possibleCall, '(', ')');
+        return possibleCall.endsWith(")") && methods.get(modifiedString) != null && !methods.get(modifiedString).getType().equals("void");
     }
 
     public static boolean isInteger(String input)
@@ -286,16 +207,5 @@ public class Util {
                 return true;
 
         return false;
-    }
-
-
-    public static boolean isAVariableAssignment(String[] tokens)
-    {
-        return tokens.length >= 3 && (tokens[1].equals("=") || tokens[2].equals("="));
-    }
-
-    public static boolean isCommentedOut(String line)
-    {
-        return line.length() > 1 && line.substring(0, 2).equals("//");
     }
 }
