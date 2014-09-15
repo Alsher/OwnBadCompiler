@@ -27,27 +27,30 @@ public class Reader
         double start = System.nanoTime();
         indexContent(fileName);
         value[0] = (System.nanoTime() - start)/(double)1000000;
-        System.out.println("indexing took " + value[0] + "ms.");
 
         /** hash the file  without any further calculation **/
         start = System.nanoTime();
         hashedMethods = HashSystem.hashMethods(indexedLines);
         value[1] = (System.nanoTime() - start)/(double)1000000;
-        System.out.println("hashing took " + value[1] + "ms.");
 
         /** parse methods in hashedMethods **/
         start = System.nanoTime();
         hashedMethods = ParseSystem.parseMethods(hashedMethods);
         value[2] = (System.nanoTime() - start)/(double)1000000;
-        System.out.println("parsing took " + value[2] + "ms.");
 
         /** compile | run **/
         start = System.nanoTime();
         Compiler.compile(hashedMethods);
         value[3] = (System.nanoTime() - start)/(double)1000000;
-        System.out.println("compiling took " + value[3] + "ms.");
 
-        System.out.println("Total: " + (value[0] + value[1] + value[2] + value[3]));
+        if(Compiler.debugOutput)
+        {
+            System.out.println("indexing took " + value[0] + "ms.");
+            System.out.println("hashing took " + value[1] + "ms.");
+            System.out.println("parsing took " + value[2] + "ms.");
+            System.out.println("compiling took " + value[3] + "ms.");
+            System.out.println("Total: " + (value[0] + value[1] + value[2] + value[3]));
+        }
     }
 
     private static void indexContent(String fileName)

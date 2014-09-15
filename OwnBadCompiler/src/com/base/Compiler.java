@@ -32,6 +32,8 @@ public class Compiler {
 
     static HashMap<String, IndexedMethod> methods = new HashMap<>();
 
+    static boolean debugOutput = true;
+
     public static void compile(HashMap<String, IndexedMethod> inputHash)
     {
         //make inputHash available for other methods
@@ -55,14 +57,15 @@ public class Compiler {
 
         }
 
-        for(IndexedMethod method : methods.values())
-        {
-            System.out.println("Method:" + method);
-            for(IndexedObject object : method.getObjects())
-                System.out.println("Object: " + object);
-            for(IndexedAction action : method.getActions())
-                System.out.println("Action: " + action);
-            System.out.println();
+        if(debugOutput) {
+            for (IndexedMethod method : methods.values()) {
+                System.out.println("Method:" + method);
+                for (IndexedObject object : method.getObjects())
+                    System.out.println("Object: " + object);
+                for (IndexedAction action : method.getActions())
+                    System.out.println("Action: " + action);
+                System.out.println();
+            }
         }
     }
 

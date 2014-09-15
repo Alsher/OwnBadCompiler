@@ -64,11 +64,6 @@ public class MathSystem {
         return calculate(rootMethod, componentList, containsMethodCall);
     }
 
-    public static Integer simpleCalculate(ArrayList<String> input)
-    {
-        return Integer.parseInt(Util.removeCharacters(Util.toUsefulString(input), ';', '[', ']'));
-    }
-
     private static Integer calculationEngine(String[] input)
     {
         int result = 0;
