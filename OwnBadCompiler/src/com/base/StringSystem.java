@@ -44,4 +44,41 @@ public class StringSystem
 
         return Util.toUsefulString(parsedComponents);
     }
+
+    public static String[] smartSplit(String input) {
+        ArrayList<String> sList = new ArrayList<>();
+
+        int space = -1;
+        for (int i = 0; i < input.length(); i++)
+        {
+            if(input.charAt(i) == '\"')
+            {
+                int start = i, end = -1;
+                for (int j = i + 1; j < input.length(); j++) {
+                    if (input.charAt(j) == '\"') {
+                        end = j;
+                        break;
+                    }
+                }
+                if(end != -1) {
+                    end++;
+                    sList.add(input.substring(start, end));
+                    i = end;
+                    space = end;
+                }
+            }
+            else if(input.charAt(i) == ' ') {
+                if(space == -1)
+                    sList.add(input.substring(0, i));
+                else
+                    sList.add(input.substring(space + 1, i));
+                space = i;
+            }
+            if(i == input.length() - 1) {
+                space++;
+                sList.add(input.substring(space == -1 ? 0 : space));
+            }
+        }
+        return sList.toArray(new String[sList.size()]);
+    }
 }

@@ -23,7 +23,11 @@ public class ActionOut extends IndexedAction
 
     public void call()
     {
-        System.out.println("Action called: " + Util.toUsefulString(getParameter()));
+
+        System.out.print("Action called: \"");
+        for(String s : getParameter())
+            System.out.print(s);
+        System.out.print("\"" + (char)10);
     }
 
     public String toString() {

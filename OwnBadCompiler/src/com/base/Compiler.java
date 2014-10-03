@@ -104,10 +104,10 @@ public class Compiler {
                     else if(Util.isAReturnMethod(parameter[i], methods))
                         parameter[i] = methods.get(Util.removeCharacters(parameter[i], '(', ')')).getReturnObject().getValue().toString();
                     else if(parameter[i].startsWith("\"") && parameter[i].endsWith("\""))
-                        parameter[i] = Util.removeCharacters(parameter[i], '"');
+                        parameter[i] = parameter[i].substring(1, parameter[i].length() - 1);
                     else {
-                        System.err.println("Error: " + parameter[i] + "is not a valid parameter!");
-                        parameter = new String[]{};
+                        System.err.println("Error: " + parameter[i] + " is not a valid parameter!");
+                        parameter = new String[]{"ERROR"};
                     }
                 }
                 actionOut.setParameter(parameter);

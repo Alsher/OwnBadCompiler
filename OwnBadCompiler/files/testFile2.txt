@@ -4,7 +4,7 @@ int i = method() + 3;
 String s2 = smethod();
 String string = "hello world";
 
-action out smethod() method();
+action out "SMethod() = " smethod() " | string = " string " | i = " i;
 }
 - (int) method:
 {

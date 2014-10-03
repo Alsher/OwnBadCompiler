@@ -129,7 +129,7 @@ public class ParseSystem {
 
     private static void parseAction(IndexedMethod rootMethod, String line, int lineNumber)
     {
-        String[] tokens = line.split(" ");
+        String[] tokens = StringSystem.smartSplit(line);
 
         switch (tokens[1])
         {
@@ -154,15 +154,7 @@ public class ParseSystem {
             if(s.endsWith(";"))
                 s = Util.removeCharacter(s, ';');
 
-            if (rootMethod.getVariables().get(s) != null)
-            {
-                parameter[i - 2] = s;
-            }
-            else if(s.startsWith("\"") && s.endsWith("\""))
-                parameter[i - 2] = Util.removeCharacter(s, '"');
-            else
-                parameter[i - 2] = s;
-
+            parameter[i - 2] = s;
         }
 
         action.setParameter(parameter);
