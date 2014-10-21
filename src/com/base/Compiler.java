@@ -56,9 +56,9 @@ public class Compiler {
                 if(object.needsCompiler())
                     compileObject(method, object);
                 /*
-                    Note: compileObject does not have to return the Object as 'object'
-                    functions as a pointer, i.e. the changes done by compileObject automatically recur to the rootMethod
-                    Hint: reason why Java is sorta shit
+                    Note: compileObject does not have to return the Object as the variable 'object'
+                    works as a pointer, i.e. the changes done by compileObject automatically recur to the rootMethod
+                    Hint: reason why Javas inaccuracy is sorta shit
                  */
         }
 

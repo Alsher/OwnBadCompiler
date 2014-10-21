@@ -176,7 +176,7 @@ public class Util {
     public static boolean isAReturnMethod(String possibleCall, HashMap<String, IndexedMethod> methods)
     {
         String modifiedString = Util.removeCharacters(possibleCall, '(', ')');
-        return possibleCall.endsWith(")") && methods.get(modifiedString) != null && !methods.get(modifiedString).getType().equals("void");
+        return possibleCall.endsWith(")") && methods.get(modifiedString) != null && methods.get(modifiedString).getType() != Compiler.METHOD_TYPE_VOID;
     }
 
     public static boolean isInteger(String input)

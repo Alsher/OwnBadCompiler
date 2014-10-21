@@ -42,7 +42,7 @@ public class HashSystem {
                         method.setBraceEnd(bracePosition.get(1));       //set brace positions in preReturn
                         method.setObjects(rawObjects);                  //set methods empty Object-Set to rawObjects
 
-                        method.setVariables(new HashMap<>());
+                        method.setVariables(new HashMap<String, IndexedObject>());
 
                         bracePosition = new ArrayList<>();              //clear bracePosition array
                         rawObjects = new ArrayList<>();                 //clear rawObjects
