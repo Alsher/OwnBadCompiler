@@ -117,7 +117,7 @@ public class MethodString extends IndexedMethod {
 
     public int getType()
     {
-        return com.base.Compiler.METHDO_TYPE_STRING;
+        return com.base.Compiler.METHOD_TYPE_STRING;
     }
 
     public IndexedObject getReturnObject()

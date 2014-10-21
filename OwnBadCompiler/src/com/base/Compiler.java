@@ -38,7 +38,7 @@ public class Compiler {
 
     public static final int METHOD_TYPE_VOID = 0;
     public static final int METHOD_TYPE_INT = 1;
-    public static final int METHDO_TYPE_STRING = 2;
+    public static final int METHOD_TYPE_STRING = 2;
 
     static HashMap<String, IndexedMethod> methods = new HashMap<>();
 
