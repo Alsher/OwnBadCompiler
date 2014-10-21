@@ -14,7 +14,7 @@ String string = "hello world";
 
 action out "SMethod() = " smethod() " | string = " string;
 }
-- (int) method:
+- (int) method: int i, String s
 {
 int returnI = 2 + 3;
 return returnI;

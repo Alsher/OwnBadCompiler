@@ -14,6 +14,10 @@ public class MethodInteger extends IndexedMethod {
     private Integer braceStart, braceEnd;
     private ArrayList<IndexedObject> objects;
     private HashMap<String, IndexedObject> variables;
+
+    private HashMap<String, IndexedObject> parameter;
+    private boolean hasParameter;
+
     private ArrayList<IndexedObject> actions;
     private IndexedObject returnObject;
 
@@ -21,6 +25,20 @@ public class MethodInteger extends IndexedMethod {
     {
         this.headerLineNumber = headerLineNumber;
         this.name = name;
+
+        hasParameter = false;
+        objects = new ArrayList<>();
+        actions = new ArrayList<>();
+        variables = new HashMap<>();
+    }
+
+    public MethodInteger(int headerLineNumber, String name, HashMap<String, IndexedObject> parameter)
+    {
+        this.headerLineNumber = headerLineNumber;
+        this.name = name;
+
+        this.parameter = parameter;
+        hasParameter = true;
 
         objects = new ArrayList<>();
         actions = new ArrayList<>();
@@ -37,10 +55,7 @@ public class MethodInteger extends IndexedMethod {
     @Override
     public void call()
     {
-        /** set return object **/
-        for(IndexedObject object : objects)
-            if(object.getType() == com.base.Compiler.VAR_TYPE_RETURN)
-                setReturnObject(object);
+        com.base.Compiler.compile(this);
     }
 
     public String toString() {
@@ -93,6 +108,17 @@ public class MethodInteger extends IndexedMethod {
     }
     public void addVariable(String name, IndexedObject variable) {
         variables.put(name, variable);
+    }
+
+    public HashMap<String, IndexedObject> getParameter() {
+        return parameter;
+    }
+    public void setParameter(HashMap<String, IndexedObject> parameter) {
+        this.parameter = parameter;
+    }
+    public boolean hasParameter()
+    {
+        return hasParameter;
     }
 
     public String getName() {

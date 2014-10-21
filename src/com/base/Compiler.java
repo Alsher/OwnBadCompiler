@@ -49,18 +49,22 @@ public class Compiler {
         //make inputHash available for other methods
         methods = inputHash;
 
-        /** compile every object that has the needsCompiler flag **/
-        for(IndexedMethod method : methods.values())
+        IndexedMethod mainMethod = methods.get("main");
+        if(mainMethod == null)
         {
-            for(IndexedObject object : method.getObjects())
-                if(object.needsCompiler())
-                    compileObject(method, object);
-                /*
-                    Note: compileObject does not have to return the Object as the variable 'object'
-                    works as a pointer, i.e. the changes done by compileObject automatically recur to the rootMethod
-                    Hint: reason why Javas inaccuracy is sorta shit
-                 */
+            System.err.println("Error: No main method found");
+            System.exit(-1);
         }
+
+        /** compile every object in main method that has the needsCompiler flag **/
+        for(IndexedObject object : mainMethod.getObjects())
+            if(object.needsCompiler())
+                compileObject(mainMethod, object);
+            /*
+                Note: compileObject does not have to return the Object as the variable 'object'
+                works as a pointer, i.e. the changes done by compileObject automatically recur to the rootMethod
+                Hint: reason why Javas inaccuracy is sorta shit
+             */
 
         if(debugOutput) {
             for (IndexedMethod method : methods.values()) {
@@ -70,6 +74,13 @@ public class Compiler {
                 System.out.println();
             }
         }
+    }
+
+    public static void compile(IndexedMethod method)
+    {
+        for(IndexedObject object : method.getObjects())
+            if(object.needsCompiler())
+                compileObject(method, object);
     }
 
     private static void compileObject(IndexedMethod rootMethod, Object object)
@@ -129,6 +140,12 @@ public class Compiler {
                             case VAR_TYPE_INT:
                                 ObjectInteger objectInteger = (ObjectInteger)uObject;
                                 objectInteger.setIntValue(MathSystem.calculate(rootMethod, objectRaw.getRawContent().substring(equapOpPos + 1), true));
+                                break;
+
+                            case VAR_TYPE_STRING:
+                                ObjectString objectString = (ObjectString)uObject;
+                                objectString.setContent(StringSystem.getContent(rootMethod, objectRaw.getRawContent().substring(equapOpPos + 1)));
+                                break;
                         }
                     }
                 }

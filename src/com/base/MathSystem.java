@@ -45,8 +45,11 @@ public class MathSystem {
                 parsedComponents[i] = ((ObjectInteger) variables.get(component)).getValue().toString();
 
             /** if not, check if component is  method call **/
-            else if(containsMethodCall && Util.isMethodCall(component))
-                parsedComponents[i] = Compiler.methods.get(Util.removeCharacters(component, '[', '(', ')', ']')).getReturnObject().getValue().toString();
+            else if(containsMethodCall && Util.isMethodCall(component)) {
+                IndexedMethod method = Compiler.methods.get(Util.removeCharacters(component, '[', '(', ')', ']'));
+                method.call();
+                parsedComponents[i] = method.getReturnObject().getValue().toString();
+            }
         }
 
         return calculationEngine(parsedComponents);

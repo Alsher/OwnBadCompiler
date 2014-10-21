@@ -8,7 +8,7 @@ public class ObjectInteger extends IndexedObject {
     private int lineNumber;
     private String name;
     private int intValue;
-    private String stringValue; //needed for storing uncompiled values
+    private String stringValue; //needed for storing non-compiled values
     private boolean needsCompiler;
 
     public ObjectInteger(int line, String name, int intValue)
@@ -52,13 +52,15 @@ public class ObjectInteger extends IndexedObject {
     public String getName() {
         return name;
     }
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public int getLineNumber() {
         return lineNumber;
     }
     public void setLineNumber(int lineNumber) {this.lineNumber = lineNumber;}
-    public void setName(String name) {
-        this.name = name;
-    }
+
     public int getIntValue() {
         return intValue;
     }
@@ -79,7 +81,6 @@ public class ObjectInteger extends IndexedObject {
     {
         this.needsCompiler = needsCompiler;
     }
-
     public boolean needsCompiler()
     {
         return needsCompiler;

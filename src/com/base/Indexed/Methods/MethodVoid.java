@@ -12,6 +12,10 @@ public class MethodVoid extends IndexedMethod {
     private String name;
     private Integer braceStart, braceEnd;
     private ArrayList<IndexedObject> objects;
+
+    private HashMap<String, IndexedObject> parameter;
+    private boolean hasParameter;
+
     private ArrayList<IndexedObject> actions;
     private HashMap<String, IndexedObject> variables;
 
@@ -19,6 +23,21 @@ public class MethodVoid extends IndexedMethod {
     {
         this.headerLineNumber = headerLineNumber;
         this.name = name;
+
+        hasParameter = false;
+
+        objects = new ArrayList<>();
+        actions = new ArrayList<>();
+        variables = new HashMap<>();
+    }
+
+    public MethodVoid(int headerLineNumber, String name, HashMap<String, IndexedObject> parameter)
+    {
+        this.headerLineNumber = headerLineNumber;
+        this.name = name;
+
+        this.parameter = parameter;
+        hasParameter = true;
 
         objects = new ArrayList<>();
         actions = new ArrayList<>();
@@ -35,7 +54,7 @@ public class MethodVoid extends IndexedMethod {
     @Override
     public void call()
     {
-        System.out.println("Method called:" + this);
+        com.base.Compiler.compile(this);
     }
 
     public String toString() {
@@ -87,6 +106,18 @@ public class MethodVoid extends IndexedMethod {
     }
     public void addVariable(String name, IndexedObject variable) {
         variables.put(name, variable);
+    }
+
+    public HashMap<String, IndexedObject> getParameter() {
+        return parameter;
+    }
+    public void setParameter(HashMap<String, IndexedObject> parameter) {
+        this.parameter = parameter;
+    }
+
+    @Override
+    public boolean hasParameter() {
+        return hasParameter;
     }
 
     public String getName() {

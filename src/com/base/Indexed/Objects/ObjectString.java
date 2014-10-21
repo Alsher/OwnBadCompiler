@@ -16,14 +16,12 @@ public class ObjectString extends IndexedObject {
         this.content = content;
         this.needsCompiler = needsCompiler;
     }
-
     public ObjectString(int lineNumber, String name, String content)
     {
         this.lineNumber = lineNumber;
         this.name = name;
         this.content = content;
     }
-
     public ObjectString(ObjectString objectString)
     {
         this.lineNumber = objectString.getLineNumber();
@@ -57,12 +55,14 @@ public class ObjectString extends IndexedObject {
         return lineNumber;
     }
     public void setLineNumber(int lineNumber) {this.lineNumber = lineNumber;}
+
     public String getName() {
         return name;
     }
     public void setName(String name) {
         this.name = name;
     }
+
     public String getContent() {
         return content;
     }
@@ -74,7 +74,6 @@ public class ObjectString extends IndexedObject {
     {
         this.needsCompiler = needsCompiler;
     }
-
     public boolean needsCompiler()
     {
         return needsCompiler;

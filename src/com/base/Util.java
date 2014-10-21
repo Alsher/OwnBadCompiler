@@ -2,11 +2,10 @@ package com.base;
 
 import com.base.Indexed.IndexedMethod;
 import com.base.Indexed.IndexedObject;
-import com.base.Indexed.Methods.MethodInteger;
-import com.base.Indexed.Methods.MethodString;
-import com.base.Indexed.Methods.MethodVoid;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -105,21 +104,20 @@ public class Util {
         return input;
     }
 
+    public static String[] trimArray(String[] input)
+    {
+        for(int i = 0; i < input.length; i++)
+            input[i] = input[i].trim();
+
+        return input;
+    }
+
     public static String getMarkedString(String[] tokens)
     {
         return getMarkedString(removeCharacter(Arrays.toString(tokens), ','));
     }
 
-    public static IndexedMethod getMethod(String[] tokens, int line)
-    {
-        switch(tokens[1])
-        {
-            case "void": return new MethodVoid(line, Util.removeCharacter(tokens[2], ':'));
-            case "int" : return new MethodInteger(line, Util.removeCharacter(tokens[2], ':'));
-            case "String" : return new MethodString(line, Util.removeCharacter(tokens[2], ':'));
-            default: return null;
-        }
-    }
+
 
     public static String toUsefulString(ArrayList<String> input)
     {
@@ -150,7 +148,6 @@ public class Util {
     {
         Pattern p = Pattern.compile("[a-zA-Z]");
         Matcher m = p.matcher(input);
-//        System.out.println("CNMT: " + input  + " | " + m.find());
         return m.find();
     }
 
@@ -166,6 +163,11 @@ public class Util {
     {
         //will only return first equalOperator
         return content.indexOf("=");
+    }
+
+    public static int getPosition(String content, char c)
+    {
+        return content.indexOf(c);
     }
 
     public static boolean isMethodCall(String input)
@@ -213,5 +215,10 @@ public class Util {
                 return true;
 
         return false;
+    }
+
+    public static boolean isInitialization(String input)
+    {
+        return input.contains("=");
     }
 }

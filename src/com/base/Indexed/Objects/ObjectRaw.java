@@ -33,7 +33,6 @@ public class ObjectRaw extends IndexedObject {
     public int getLineNumber() {
         return lineNumber;
     }
-
     public void setLineNumber(int lineNumber) {
         this.lineNumber = lineNumber;
     }
@@ -45,7 +44,6 @@ public class ObjectRaw extends IndexedObject {
     public String getRawContent() {
         return rawContent;
     }
-
     public void setRawContent(String rawContent) {
         this.rawContent = rawContent;
     }

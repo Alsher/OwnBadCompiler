@@ -26,7 +26,6 @@ public class IndexedLine {
     public String getLine() {
         return line;
     }
-
     public void setLine(String line) {
         this.line = line;
     }
@@ -34,7 +33,6 @@ public class IndexedLine {
     public Integer getLineNumber() {
         return lineNumber;
     }
-
     public void setLineNumber(Integer lineNumber) {
         this.lineNumber = lineNumber;
     }

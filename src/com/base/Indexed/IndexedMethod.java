@@ -44,6 +44,10 @@ public abstract class IndexedMethod {
     public abstract void setActions(ArrayList<IndexedObject> actions);
     public abstract void addAction(IndexedObject action);
 
+    public abstract HashMap<String, IndexedObject> getParameter();
+    public abstract void setParameter(HashMap<String, IndexedObject> parameter);
+    public abstract boolean hasParameter();
+
     public abstract int getType();
     public abstract String getName();
 

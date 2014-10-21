@@ -22,6 +22,7 @@ import java.util.HashMap;
 public class ParseSystem {
 
     static ArrayList<IndexedObject> objectArrayList = new ArrayList<>();
+    static ArrayList<IndexedObject> parameterList = new ArrayList<>();
 
     public static HashMap<String, IndexedMethod> parseMethods(HashMap<String, IndexedMethod> input)
     {
@@ -33,10 +34,23 @@ public class ParseSystem {
             for(IndexedObject object : method.getObjects())
                 parseObject(method, object);
 
+            //check for parameter
+            if(method.hasParameter()) {
+                for (IndexedObject object : method.getParameter().values())
+                    parseParameter(method, object);
+
+                HashMap<String, IndexedObject> parameterMap = new HashMap<>();
+                for (IndexedObject object : parameterList)
+                    parameterMap.put(object.getValue().toString(), object);
+
+                method.setParameter(parameterMap);       //add parsed Parameters to current method
+            }
+
             method.setObjects(objectArrayList);          //add parsed Objects to current method
 
             returnHash.put(method.getName(), method);    //add everything to the returnHash
             objectArrayList = new ArrayList<>();         //clear objects ArrayList
+            parameterList = new ArrayList<>();           //clear parameter ArrayList
         }
         return returnHash;
     }
@@ -49,8 +63,8 @@ public class ParseSystem {
         //check for object identifier and parse according to it
         switch(tokens[0])
         {
-            case "int":   parseInteger(rootMethod, line, object.getLineNumber()); break;
-            case "String": parseString(rootMethod, line, object.getLineNumber()); break;
+            case "int":   parseInteger(rootMethod, line, object.getLineNumber(), objectArrayList); break;
+            case "String": parseString(rootMethod, line, object.getLineNumber(), objectArrayList); break;
             case "return": parseReturn(rootMethod, line, object.getLineNumber()); break;
             case "action": parseAction(rootMethod, line, object.getLineNumber()); break;
 
@@ -58,7 +72,7 @@ public class ParseSystem {
         }
     }
 
-    private static void parseInteger(IndexedMethod rootMethod, String line, int lineNumber)
+    private static void parseInteger(IndexedMethod rootMethod, String line, int lineNumber, ArrayList<IndexedObject> listType)
     {
         String[] tokens = line.split(" ");
         ObjectInteger object = new ObjectInteger();
@@ -66,39 +80,49 @@ public class ParseSystem {
         object.setLineNumber(lineNumber);                       //set line number
         object.setName(tokens[1]);                              //set var name
 
-        if(!Util.containsNonMathType(Util.removeCharacters(Util.toUsefulString(tokens), ';', '[', ']')))            //check if value is digit-only | contains no possible method call
-        {
-            object.setIntValue(MathSystem.calculate(rootMethod, tokens, false));     //do the math and add it returnInteger
-            object.setNeedsCompiler(false);                                        //flag the object as non-compiling
-            rootMethod.getVariables().put(object.getName(), object);
+        if(Util.isInitialization(line)) {
+            if (!Util.containsNonMathType(Util.removeCharacters(Util.toUsefulString(tokens), ';', '[', ']')))            //check if value is digit-only | contains no possible method call
+            {
+                object.setIntValue(MathSystem.calculate(rootMethod, tokens, false));     //do the math and add it returnInteger
+                object.setNeedsCompiler(false);                                        //flag the object as non-compiling
+                rootMethod.getVariables().put(object.getName(), object);
+            } else {
+                object.setStringValue(Util.removeCharacters(Util.toUsefulString(tokens), '[', ']')); //add ObjectInteger with complete line as StringValue
+                rootMethod.addVariable(object.getName(), object);
+            }
         }
         else
         {
-            object.setStringValue(Util.removeCharacters(Util.toUsefulString(tokens), '[', ']')); //add ObjectInteger with complete line as StringValue
-            rootMethod.addVariable(object.getName(), object);
+            //use value variable as name placeholder
+            object.setStringValue(object.getName());
         }
-        objectArrayList.add(object);
+        listType.add(object);
     }
 
-    private static void parseString(IndexedMethod rootMethod, String line, int lineNumber)
+    private static void parseString(IndexedMethod rootMethod, String line, int lineNumber, ArrayList<IndexedObject> listType)
     {
         String[] tokens = line.split(" ");
         ObjectString object = new ObjectString();
 
         object.setLineNumber(lineNumber);                        //set line number
         object.setName(tokens[1]);                               //set var name
-        if(!line.contains("()"))
-        {
-            object.setContent(Util.getMarkedString(tokens));     //set content to everything in side  ".."
-            object.setNeedsCompiler(false);                      //flag the object as non-compiling
-            rootMethod.getVariables().put(object.getName(), object); //add to rootMethod
+
+        if(Util.isInitialization(line)) {
+            if (!line.contains("()")) {
+                object.setContent(Util.getMarkedString(tokens));     //set content to everything in side  ".."
+                object.setNeedsCompiler(false);                      //flag the object as non-compiling
+                rootMethod.getVariables().put(object.getName(), object); //add to rootMethod
+            } else {
+                object.setContent(Util.removeCharacters(Util.toUsefulString(tokens), '[', ']')); //add ObjectString with complete line as context
+                rootMethod.addVariable(object.getName(), object);                                 //will be compiled later
+            }
         }
         else
         {
-            object.setContent(Util.removeCharacters(Util.toUsefulString(tokens), '[', ']')); //add ObjectString with complete line as context
-            rootMethod.addVariable(object.getName(), object);                                 //will be compiled later
+            //use value variable as name placeholder
+            object.setContent(object.getName());
         }
-        objectArrayList.add(object);
+        listType.add(object);
     }
 
     private static void parseReturn(IndexedMethod rootMethod, String line, int lineNumber)
@@ -159,6 +183,19 @@ public class ParseSystem {
 
         action.setParameter(parameter);
         objectArrayList.add(action);
+    }
+
+    private static void parseParameter(IndexedMethod rootMethod, IndexedObject object)
+    {
+        String line = object.getValue().toString();
+        String[] tokens = line.split(" ");
+
+        //check for object identifier and parse according to it
+        switch(tokens[0])
+        {
+            case "int":   parseInteger(rootMethod, line, object.getLineNumber(), parameterList); break;
+            case "String": parseString(rootMethod, line, object.getLineNumber(), parameterList); break;
+        }
     }
 
     private static void parseDefault(String content, int lineNumber)
