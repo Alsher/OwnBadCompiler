@@ -1,23 +1,19 @@
 package com.base.Indexed.Methods;
 
-import com.base.Indexed.IndexedAction;
 import com.base.Indexed.IndexedMethod;
 import com.base.Indexed.IndexedObject;
-import com.base.Util;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class MethodString extends IndexedMethod {
 
-    private static final String TYPE = "String";
-
     private int headerLineNumber;
     private String name;
     private Integer braceStart, braceEnd;
     private ArrayList<IndexedObject> objects;
     private HashMap<String, IndexedObject> variables;
-    private ArrayList<IndexedAction> actions;
+    private ArrayList<IndexedObject> actions;
     private IndexedObject returnObject;
 
     public MethodString(int headerLineNumber, String name)
@@ -42,7 +38,7 @@ public class MethodString extends IndexedMethod {
     {
         //set return object
         for(IndexedObject object : objects)
-            if(object.getType().equals("return"))
+            if(object.getType() == com.base.Compiler.VAR_TYPE_RETURN)
                 setReturnObject(object);
     }
 
@@ -79,14 +75,14 @@ public class MethodString extends IndexedMethod {
         objects.add(object);
     }
 
-    public ArrayList<IndexedAction> getActions() {
+    public ArrayList<IndexedObject> getActions() {
         return actions;
     }
 
-    public void setActions(ArrayList<IndexedAction> actions) {
+    public void setActions(ArrayList<IndexedObject> actions) {
         this.actions = actions;
     }
-    public void addAction(IndexedAction action) {
+    public void addAction(IndexedObject action) {
         this.actions.add(action);
     }
 
@@ -119,9 +115,9 @@ public class MethodString extends IndexedMethod {
         this.braceEnd = braceEnd;
     }
 
-    public String getType()
+    public int getType()
     {
-        return TYPE;
+        return com.base.Compiler.METHDO_TYPE_STRING;
     }
 
     public IndexedObject getReturnObject()

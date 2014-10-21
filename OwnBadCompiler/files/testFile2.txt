@@ -1,10 +1,18 @@
 - (void) main:
 {
-int i = method() + 3;
+int i = 3;
+action out i;
+
+i = i + i;
+action out i;
+
+i = 1;
+action out i;
+
 String s2 = smethod();
 String string = "hello world";
 
-action out "SMethod() = " smethod() " | string = " string " | i = " i;
+action out "SMethod() = " smethod() " | string = " string;
 }
 - (int) method:
 {

@@ -13,7 +13,7 @@ import java.util.HashMap;
 public abstract class IndexedMethod {
 
     public HashMap<String, IndexedObject> variables;
-    public ArrayList<IndexedAction> actions;
+    public ArrayList<IndexedObject> actions;
 
     public abstract void call();
 
@@ -39,12 +39,12 @@ public abstract class IndexedMethod {
     public abstract void setVariables(HashMap<String, IndexedObject> variables);
     public abstract void addVariable(String name, IndexedObject variable);
 
-    public abstract ArrayList<IndexedAction> getActions();
+    public abstract ArrayList<IndexedObject> getActions();
 
-    public abstract void setActions(ArrayList<IndexedAction> actions);
-    public abstract void addAction(IndexedAction action);
+    public abstract void setActions(ArrayList<IndexedObject> actions);
+    public abstract void addAction(IndexedObject action);
 
-    public abstract String getType();
+    public abstract int getType();
     public abstract String getName();
 
     public abstract void setReturnObject(IndexedObject returnObject);

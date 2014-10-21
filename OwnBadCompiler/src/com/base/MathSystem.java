@@ -14,10 +14,10 @@ public class MathSystem {
 
     public static Integer calculate(IndexedMethod rootMethod, ArrayList<String> components, boolean containsMethodCall) //does currently only work for positive and negative values / + and - operators
     {
+
         int equalOpPos = Util.getEqualOperator(components);
 //        String equalop = components.get(equalOpPos);
 //        System.out.println("MS: " + components + equalop);
-
         components = Util.removeFromTo(components, 0, equalOpPos);
 
         HashMap<String, IndexedObject> variables = rootMethod.getVariables();

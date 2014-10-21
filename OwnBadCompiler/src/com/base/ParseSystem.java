@@ -158,11 +158,15 @@ public class ParseSystem {
         }
 
         action.setParameter(parameter);
-        rootMethod.addAction(action);
+        objectArrayList.add(action);
     }
 
     private static void parseDefault(String content, int lineNumber)
     {
+        ObjectRaw object = new ObjectRaw(lineNumber, content);
+
+        if(content.matches("[a-zA-Z]\\s[=]\\s[0-9a-zA-Z]"))
+            object.setAdditionalInfo(Compiler.VAR_TYPE_RAW);
         objectArrayList.add(new ObjectRaw(lineNumber, content));
     }
 }

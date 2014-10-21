@@ -162,6 +162,12 @@ public class Util {
         return 0;
     }
 
+    public static int getEqualOperator(String content)
+    {
+        //will only return first equalOperator
+        return content.indexOf("=");
+    }
+
     public static boolean isMethodCall(String input)
     {
         return Compiler.methods.get(Util.removeCharacters(input, '[', '(', ')', ']')) != null;

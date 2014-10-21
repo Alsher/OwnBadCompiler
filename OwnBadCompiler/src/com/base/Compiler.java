@@ -1,10 +1,10 @@
 package com.base;
 
 import com.base.Indexed.Actions.ActionOut;
-import com.base.Indexed.IndexedAction;
 import com.base.Indexed.IndexedMethod;
 import com.base.Indexed.IndexedObject;
 import com.base.Indexed.Objects.ObjectInteger;
+import com.base.Indexed.Objects.ObjectRaw;
 import com.base.Indexed.Objects.ObjectReturn;
 import com.base.Indexed.Objects.ObjectString;
 
@@ -30,6 +30,16 @@ import java.util.HashMap;
 
 public class Compiler {
 
+    public static final int VAR_TYPE_RAW = 0;
+    public static final int VAR_TYPE_RETURN = 1;
+    public static final int VAR_TYPE_INT = 2;
+    public static final int VAR_TYPE_STRING = 3;
+    public static final int ACTION_TYPE_OUT = 4;
+
+    public static final int METHOD_TYPE_VOID = 0;
+    public static final int METHOD_TYPE_INT = 1;
+    public static final int METHDO_TYPE_STRING = 2;
+
     static HashMap<String, IndexedMethod> methods = new HashMap<>();
 
     static boolean debugOutput = true;
@@ -50,11 +60,6 @@ public class Compiler {
                     functions as a pointer, i.e. the changes done by compileObject automatically recur to the rootMethod
                     Hint: reason why Java is sorta shit
                  */
-
-            for(IndexedAction action : method.getActions())
-                if(action.needsCompiler())
-                    compileObject(method, action);
-
         }
 
         if(debugOutput) {
@@ -62,8 +67,6 @@ public class Compiler {
                 System.out.println("Method:" + method);
                 for (IndexedObject object : method.getObjects())
                     System.out.println("Object: " + object);
-                for (IndexedAction action : method.getActions())
-                    System.out.println("Action: " + action);
                 System.out.println();
             }
         }
@@ -91,10 +94,7 @@ public class Compiler {
                 objectReturn.setReturnObject(rootMethod.getVariable(Util.removeCharacter(objectReturn.getContent().split(" ")[1], ';')));
                 objectReturn.setNeedsCompiler(false);
             }
-        }
-        else if(object instanceof IndexedAction)
-        {
-            if(object instanceof ActionOut)
+            else if(object instanceof ActionOut)
             {
                 ActionOut actionOut = (ActionOut) object;
                 String[] parameter = actionOut.getParameter();
@@ -113,6 +113,25 @@ public class Compiler {
                 actionOut.setParameter(parameter);
                 actionOut.setNeedsCompiler(false);
                 actionOut.call();
+            }
+
+            else if(object instanceof ObjectRaw)
+            {
+                ObjectRaw objectRaw = (ObjectRaw) object;
+                if(objectRaw.getAdditionalInfo() == VAR_TYPE_RAW)
+                {
+                    int equapOpPos = Util.getEqualOperator(objectRaw.getRawContent());
+                    IndexedObject uObject =  rootMethod.getVariable(objectRaw.getRawContent().substring(0, equapOpPos - 1));
+                    if(uObject != null)
+                    {
+                        switch (uObject.getType())
+                        {
+                            case VAR_TYPE_INT:
+                                ObjectInteger objectInteger = (ObjectInteger)uObject;
+                                objectInteger.setIntValue(MathSystem.calculate(rootMethod, objectRaw.getRawContent().substring(equapOpPos + 1), true));
+                        }
+                    }
+                }
             }
         }
     }

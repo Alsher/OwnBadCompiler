@@ -1,9 +1,7 @@
 package com.base.Indexed.Methods;
 
-import com.base.Indexed.IndexedAction;
 import com.base.Indexed.IndexedMethod;
 import com.base.Indexed.IndexedObject;
-import com.base.Util;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,7 +12,7 @@ public class MethodVoid extends IndexedMethod {
     private String name;
     private Integer braceStart, braceEnd;
     private ArrayList<IndexedObject> objects;
-    private ArrayList<IndexedAction> actions;
+    private ArrayList<IndexedObject> actions;
     private HashMap<String, IndexedObject> variables;
 
     public MethodVoid(int headerLineNumber, String name)
@@ -73,14 +71,14 @@ public class MethodVoid extends IndexedMethod {
         objects.add(object);
     }
 
-    public ArrayList<IndexedAction> getActions() {
+    public ArrayList<IndexedObject> getActions() {
         return actions;
     }
 
-    public void setActions(ArrayList<IndexedAction> actions) {
+    public void setActions(ArrayList<IndexedObject> actions) {
         this.actions = actions;
     }
-    public void addAction(IndexedAction action) {
+    public void addAction(IndexedObject action) {
         this.actions.add(action);
     }
 
@@ -112,9 +110,9 @@ public class MethodVoid extends IndexedMethod {
         this.braceEnd = braceEnd;
     }
 
-    public String getType()
+    public int getType()
     {
-        return "void";
+        return com.base.Compiler.METHOD_TYPE_VOID;
     }
 
     public IndexedObject getReturnObject()

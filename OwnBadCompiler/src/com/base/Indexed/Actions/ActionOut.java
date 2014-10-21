@@ -1,12 +1,10 @@
 package com.base.Indexed.Actions;
 
-import com.base.Indexed.IndexedAction;
-import com.base.Util;
+import com.base.*;
+import com.base.Indexed.IndexedObject;
 
-public class ActionOut extends IndexedAction
+public class ActionOut extends IndexedObject
 {
-    private static final String TYPE = "action";
-
     private int lineNumber;
     private String[] parameter;
     private boolean needsCompiler;
@@ -33,27 +31,28 @@ public class ActionOut extends IndexedAction
     public String toString() {
         return "[Line: " + lineNumber + " | parameters: " + Util.toUsefulString(parameter) + "]";
     }
+    public Object getValue() {
+        return parameter;
+    }
 
     public String[] getParameter() {
         return parameter;
+    }
+    public void setParameter(String[] parameter)
+    {
+        this.parameter = parameter;
     }
 
     public int getLineNumber() {
         return lineNumber;
     }
-
-    public String getType() {
-        return TYPE;
-    }
-
     public void setLineNumber(int lineNumber)
     {
         this.lineNumber = lineNumber;
     }
 
-    public void setParameter(String[] parameter)
-    {
-        this.parameter = parameter;
+    public int getType() {
+        return com.base.Compiler.ACTION_TYPE_OUT;
     }
 
     public boolean needsCompiler()

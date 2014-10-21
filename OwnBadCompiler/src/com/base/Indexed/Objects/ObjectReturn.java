@@ -36,9 +36,9 @@ public class ObjectReturn extends IndexedObject{
         return "Error: returnObject is not set";
     }
 
-    public String getType()
+    public int getType()
     {
-        return TYPE;
+        return com.base.Compiler.VAR_TYPE_RETURN;
     }
 
     public int getLineNumber() {

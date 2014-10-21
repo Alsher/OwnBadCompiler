@@ -4,8 +4,6 @@ import com.base.Indexed.IndexedObject;
 
 public class ObjectString extends IndexedObject {
 
-    private static final String TYPE = "String";
-
     private int lineNumber;
     private String name;
     private String content;
@@ -50,9 +48,9 @@ public class ObjectString extends IndexedObject {
         return content;
     }
 
-    public String getType()
+    public int getType()
     {
-        return TYPE;
+        return com.base.Compiler.VAR_TYPE_STRING;
     }
 
     public int getLineNumber() {

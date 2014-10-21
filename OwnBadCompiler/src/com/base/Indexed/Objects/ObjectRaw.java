@@ -2,30 +2,28 @@ package com.base.Indexed.Objects;
 
 import com.base.Indexed.IndexedObject;
 
-public class ObjectRaw extends IndexedObject{
-
-    private static final String TYPE = "raw";
+public class ObjectRaw extends IndexedObject {
 
     private int lineNumber;
     private String rawContent;
+    private int additionalInfo;
 
     private boolean needsCompiler;
 
-    public ObjectRaw(int lineNumber, String rawContent)
-    {
+    public ObjectRaw(int lineNumber, String rawContent) {
         this.lineNumber = lineNumber;
         this.rawContent = rawContent;
         this.needsCompiler = true;
+        additionalInfo = 0;
     }
 
-    public ObjectRaw()
-    {
+    public ObjectRaw() {
         this.lineNumber = -1;
     }
 
     @Override
     public String toString() {
-        return "[Line:" + lineNumber + " | Type: " + getType() + " | Needs to be compiled:" + needsCompiler + " | raw content:" + rawContent + "]";
+        return "[Line:" + lineNumber + " | Type: " + getType() + " | Needs to be compiled:" + needsCompiler + " | Additional Information: " + additionalInfo + " | raw content:" + rawContent + "]";
     }
 
     public Object getValue() {
@@ -36,13 +34,12 @@ public class ObjectRaw extends IndexedObject{
         return lineNumber;
     }
 
-    public String getType()
-    {
-        return TYPE;
-    }
-
     public void setLineNumber(int lineNumber) {
         this.lineNumber = lineNumber;
+    }
+
+    public int getType() {
+        return com.base.Compiler.VAR_TYPE_RAW;
     }
 
     public String getRawContent() {
@@ -53,11 +50,19 @@ public class ObjectRaw extends IndexedObject{
         this.rawContent = rawContent;
     }
 
+    public int getAdditionalInfo()
+    {
+        return additionalInfo;
+    }
+    public void setAdditionalInfo(int additionalInfo)
+    {
+        this.additionalInfo = additionalInfo;
+    }
+
     public void setNeedsCompiler(boolean needsCompiler)
     {
         this.needsCompiler = needsCompiler;
     }
-
     public boolean needsCompiler()
     {
         return needsCompiler;
