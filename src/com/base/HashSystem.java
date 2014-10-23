@@ -61,17 +61,17 @@ public class HashSystem {
     {
         String[] tokens = content.split(" ");
         int paramPosition = Util.getPosition(content, ':');
-        HashMap<String, IndexedObject> parameter;
+        ArrayList<IndexedObject> parameter;
 
         if((paramPosition + 1) < content.length())
         {
             String[] param = content.substring(paramPosition + 1).split(",");
             param = Util.trimArray(param);
 
-            parameter = new HashMap<>();
+            parameter = new ArrayList<>();
 
             for(String s : param)
-                parameter.put(s.split(" ")[1], new ObjectRaw(line, s));
+                parameter.add(new ObjectRaw(line, s));
 
             switch(tokens[1])
             {

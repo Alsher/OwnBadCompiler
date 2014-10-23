@@ -43,6 +43,13 @@ public class ObjectInteger extends IndexedObject {
     {
         return getIntValue();
     }
+    public void setValue(Object value)
+    {
+        if(value instanceof Integer)
+            this.intValue = (Integer) value;
+        else
+            System.err.println("Error: " + value + " is not an Integer");
+    }
 
     public int getType()
     {

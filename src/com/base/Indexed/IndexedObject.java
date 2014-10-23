@@ -20,8 +20,10 @@ public abstract class IndexedObject
 
     public abstract String toString();
     public abstract Object getValue();
+    public abstract void setValue(Object value);
     public abstract int getLineNumber();
     public abstract int getType();
+    public abstract String getName();
 
     public abstract boolean needsCompiler();
 }

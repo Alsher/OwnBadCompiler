@@ -81,6 +81,12 @@ public class Compiler {
         for(IndexedObject object : method.getObjects())
             if(object.needsCompiler())
                 compileObject(method, object);
+        if(!(method.getReturnObject() instanceof ObjectReturn))
+        {
+
+            IndexedObject returnObject;
+//            if(method.getVariable())
+        }
     }
 
     private static void compileObject(IndexedMethod rootMethod, Object object)
@@ -110,15 +116,53 @@ public class Compiler {
                 ActionOut actionOut = (ActionOut) object;
                 String[] parameter = actionOut.getParameter();
                 for(int i = 0; i < parameter.length; i++) {
-                    if (rootMethod.getVariable(parameter[i]) != null && !rootMethod.getVariable(parameter[i]).needsCompiler())
+                    String param = parameter[i];
+                    /** check for variables **/
+                    if (rootMethod.getVariable(param) != null && !rootMethod.getVariable(parameter[i]).needsCompiler())
                         parameter[i] = rootMethod.getVariable(parameter[i]).getValue().toString();
-                    else if(Util.isAReturnMethod(parameter[i], methods))
-                        parameter[i] = methods.get(Util.removeCharacters(parameter[i], '(', ')')).getReturnObject().getValue().toString();
-                    else if(parameter[i].startsWith("\"") && parameter[i].endsWith("\""))
-                        parameter[i] = parameter[i].substring(1, parameter[i].length() - 1);
+
+                    /** check for loose Strings **/
+                    else if (param.startsWith("\"") && param.endsWith("\""))
+                        parameter[i] = parameter[i].substring(1, param.length() - 1);
+
+                    /** check for method calls **/
                     else {
-                        System.err.println("Error: " + parameter[i] + " is not a valid parameter!");
-                        parameter = new String[]{"ERROR"};
+                        IndexedMethod method = methods.get(param.substring(0, Util.getPosition(param, '(')));
+
+                        if (method != null)
+                        {
+                            if(method.hasParameter())
+                            {
+                                String paramString = param.substring(Util.getPosition(parameter[i], '(') + 1, Util.getPosition(param, ')'));
+                                String[] parameterInCall = Util.trimArray(paramString.split(","));
+                                int paramArrayCount = 0;
+                                for (String s : parameterInCall) {
+                                    if(Util.isInteger(s))
+                                        method.getParameter(paramArrayCount).setValue(Integer.valueOf(s));
+                                    else if(s.startsWith("\"") && s.endsWith("\""))
+                                        method.getParameter(paramArrayCount).setValue(s.substring(1, s.length() - 1));
+
+                                    else if(rootMethod.getVariable(s) != null)
+                                    {
+                                        IndexedObject var = rootMethod.getVariable(s);
+                                        if(var instanceof ObjectInteger)
+                                            method.getParameter(paramArrayCount).setValue(((ObjectInteger) var).getIntValue());
+                                        else if(var instanceof ObjectString)
+                                            method.getParameter(paramArrayCount).setValue(var.getValue());
+                                    }
+                                    //TODO: add support for rootMethod.getParameter(param)
+                                    else
+                                        method.getParameter(paramArrayCount).setValue(s);
+                                    paramArrayCount++;
+                                }
+                            }
+                            method.call();
+                            parameter[i] = methods.get(param.substring(0, Util.getPosition(param, '('))).getReturnObject().getValue().toString();
+                        }
+                        else {
+                            System.err.println("Error: " + parameter[i] + " is not a valid parameter!");
+                            parameter = new String[]{"ERROR"};
+                        }
                     }
                 }
                 actionOut.setParameter(parameter);

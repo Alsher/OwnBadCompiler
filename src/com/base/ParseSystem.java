@@ -36,14 +36,14 @@ public class ParseSystem {
 
             //check for parameter
             if(method.hasParameter()) {
-                for (IndexedObject object : method.getParameter().values())
+                for (IndexedObject object : method.getParameters())
                     parseParameter(method, object);
 
-                HashMap<String, IndexedObject> parameterMap = new HashMap<>();
+                ArrayList<IndexedObject> parameterMap = new ArrayList<>();
                 for (IndexedObject object : parameterList)
-                    parameterMap.put(object.getValue().toString(), object);
+                    parameterMap.add(object);
 
-                method.setParameter(parameterMap);       //add parsed Parameters to current method
+                method.setParameters(parameterMap);       //add parsed Parameters to current method
             }
 
             method.setObjects(objectArrayList);          //add parsed Objects to current method
@@ -108,7 +108,7 @@ public class ParseSystem {
         object.setName(tokens[1]);                               //set var name
 
         if(Util.isInitialization(line)) {
-            if (!line.contains("()")) {
+            if (!line.contains("(") && line.contains("\"") && !Util.isAMathOperator(line)) {
                 object.setContent(Util.getMarkedString(tokens));     //set content to everything in side  ".."
                 object.setNeedsCompiler(false);                      //flag the object as non-compiling
                 rootMethod.getVariables().put(object.getName(), object); //add to rootMethod
@@ -153,6 +153,7 @@ public class ParseSystem {
 
     private static void parseAction(IndexedMethod rootMethod, String line, int lineNumber)
     {
+        //TODO: fix smartSplit bug with loose String method calls
         String[] tokens = StringSystem.smartSplit(line);
 
         switch (tokens[1])

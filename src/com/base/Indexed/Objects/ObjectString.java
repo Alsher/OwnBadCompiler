@@ -45,6 +45,13 @@ public class ObjectString extends IndexedObject {
     {
         return content;
     }
+    public void setValue(Object content)
+    {
+        if(content instanceof String)
+            this.content = (String) content;
+        else
+            System.err.println("Error: " + content + " is not a String");
+    }
 
     public int getType()
     {

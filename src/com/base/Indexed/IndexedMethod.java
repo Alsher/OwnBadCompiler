@@ -22,15 +22,15 @@ public abstract class IndexedMethod {
     public abstract void setHeaderLineNumber(int lineNumber);
     public abstract int getHeaderLineNumber();
 
-    public abstract Integer getBraceStart();
     public abstract void setBraceStart(Integer braceStart);
-    public abstract Integer getBraceEnd();
+    public abstract Integer getBraceStart();
     public abstract void setBraceEnd(Integer braceEnd);
+    public abstract Integer getBraceEnd();
 
     public abstract ArrayList<IndexedObject> getObjects();
     public abstract HashMap<String, IndexedObject> getVariables();
 
-    public abstract IndexedObject getObjectAt(int index);
+    public abstract IndexedObject getObject(int index);
     public abstract IndexedObject getVariable(String name);
 
     public abstract void setObjects(ArrayList<IndexedObject> objects);
@@ -44,8 +44,9 @@ public abstract class IndexedMethod {
     public abstract void setActions(ArrayList<IndexedObject> actions);
     public abstract void addAction(IndexedObject action);
 
-    public abstract HashMap<String, IndexedObject> getParameter();
-    public abstract void setParameter(HashMap<String, IndexedObject> parameter);
+    public abstract ArrayList<IndexedObject> getParameters();
+    public abstract IndexedObject getParameter(int index);
+    public abstract void setParameters(ArrayList<IndexedObject> parameter);
     public abstract boolean hasParameter();
 
     public abstract int getType();

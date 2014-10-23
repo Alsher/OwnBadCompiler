@@ -1,26 +1,17 @@
 - (void) main:
 {
-int i = 3;
-action out i;
-
-i = i + i;
-action out i;
-
-i = 1;
-action out i;
-
-String s2 = smethod();
-String string = "hello world";
-
-action out "SMethod() = " smethod() " | string = " string;
+action out method(20);
+//action out stringMethod("hello"); //does not yet work
 }
-- (int) method: int i, String s
+
+- (int) method: int i
 {
-int returnI = 2 + 3;
+int returnI = i - 4;
 return returnI;
 }
-- (String) smethod:
+
+- (String) stringMethod: String s
 {
-String returnS = "bla";
-return returnS;
+String returnString = s;
+return returnString;
 }

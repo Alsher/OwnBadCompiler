@@ -13,7 +13,7 @@ public class MethodVoid extends IndexedMethod {
     private Integer braceStart, braceEnd;
     private ArrayList<IndexedObject> objects;
 
-    private HashMap<String, IndexedObject> parameter;
+    private ArrayList<IndexedObject> parameter;
     private boolean hasParameter;
 
     private ArrayList<IndexedObject> actions;
@@ -31,7 +31,7 @@ public class MethodVoid extends IndexedMethod {
         variables = new HashMap<>();
     }
 
-    public MethodVoid(int headerLineNumber, String name, HashMap<String, IndexedObject> parameter)
+    public MethodVoid(int headerLineNumber, String name, ArrayList<IndexedObject> parameter)
     {
         this.headerLineNumber = headerLineNumber;
         this.name = name;
@@ -58,10 +58,84 @@ public class MethodVoid extends IndexedMethod {
     }
 
     public String toString() {
-        return "[Head line:" + getHeaderLineNumber() + " | Start line:" + braceStart + " | End line:" + braceEnd + " | Method type:" + getType() +
+        return "[Head line:" + getHeaderLineNumber() + " | Start line:" + braceStart + " | End line:" + braceEnd + " | Method type: " + getType() +
                " | Name: " + name + " | Has content: " + (braceStart != null && braceEnd != null) + "]";
     }
 
+    /** objects **/
+    public void setObjects(ArrayList<IndexedObject> objects) {
+        this.objects = objects;
+    }
+    public ArrayList<IndexedObject> getObjects() {
+        return objects;
+    }
+    public IndexedObject getObject(int index) {
+        return objects.get(index);
+    }
+    public void addObject(IndexedObject object) {
+        objects.add(object);
+    }
+
+    /** variables **/
+    public void setVariables(HashMap<String, IndexedObject> variables) {
+        this.variables = variables;
+    }
+    public HashMap<String, IndexedObject> getVariables() {
+        return variables;
+    }
+    public IndexedObject getVariable(String name) {
+        return variables.get(name);
+    }
+    public void addVariable(String name, IndexedObject variable) {
+        variables.put(name, variable);
+    }
+
+    /** parameters **/
+    public void setParameters(ArrayList<IndexedObject> parameter) {
+        this.parameter = parameter;
+    }
+    public ArrayList<IndexedObject> getParameters() {
+        return parameter;
+    }
+    public IndexedObject getParameter(int index)
+    {
+        return parameter.get(index);
+    }
+    public void addParameter(IndexedObject parameter)
+    {
+        this.parameter.add(parameter);
+    }
+    public boolean hasParameter()
+    {
+        return hasParameter;
+    }
+
+    /** actions **/
+    public void setActions(ArrayList<IndexedObject> actions) {
+        this.actions = actions;
+    }
+    public ArrayList<IndexedObject> getActions() {
+        return actions;
+    }
+    public IndexedObject getAction(int index)
+    {
+        return this.actions.get(index);
+    }
+    public void addAction(IndexedObject action) {
+        this.actions.add(action);
+        addObject(action);
+    }
+
+    /** returnObject **/
+    public IndexedObject getReturnObject()
+    {
+        return null;
+    }
+    public void setReturnObject(IndexedObject returnObject) {
+
+    }
+
+    /** lineNumber **/
     public void setHeaderLineNumber(int lineNumber) {
         headerLineNumber = lineNumber;
     }
@@ -69,57 +143,7 @@ public class MethodVoid extends IndexedMethod {
         return headerLineNumber;
     }
 
-    public ArrayList<IndexedObject> getObjects() {
-        return objects;
-    }
-    public IndexedObject getVariable(String name) {
-        return variables.get(name);
-    }
-
-    public HashMap<String, IndexedObject> getVariables() {
-        return variables;
-    }
-    public IndexedObject getObjectAt(int index) {
-        return objects.get(index);
-    }
-
-    public void setObjects(ArrayList<IndexedObject> objects) {
-        this.objects = objects;
-    }
-    public void addObject(IndexedObject object) {
-        objects.add(object);
-    }
-
-    public ArrayList<IndexedObject> getActions() {
-        return actions;
-    }
-
-    public void setActions(ArrayList<IndexedObject> actions) {
-        this.actions = actions;
-    }
-    public void addAction(IndexedObject action) {
-        this.actions.add(action);
-    }
-
-    public void setVariables(HashMap<String, IndexedObject> variables) {
-        this.variables = variables;
-    }
-    public void addVariable(String name, IndexedObject variable) {
-        variables.put(name, variable);
-    }
-
-    public HashMap<String, IndexedObject> getParameter() {
-        return parameter;
-    }
-    public void setParameter(HashMap<String, IndexedObject> parameter) {
-        this.parameter = parameter;
-    }
-
-    @Override
-    public boolean hasParameter() {
-        return hasParameter;
-    }
-
+    /** name **/
     public String getName() {
         return name;
     }
@@ -127,13 +151,13 @@ public class MethodVoid extends IndexedMethod {
         this.name = name;
     }
 
+    /** braces **/
     public Integer getBraceStart() {
         return braceStart;
     }
     public void setBraceStart(Integer braceStart) {
         this.braceStart = braceStart;
     }
-
     public Integer getBraceEnd() {
         return braceEnd;
     }
@@ -141,17 +165,9 @@ public class MethodVoid extends IndexedMethod {
         this.braceEnd = braceEnd;
     }
 
+    /** type **/
     public int getType()
     {
         return com.base.Compiler.METHOD_TYPE_VOID;
-    }
-
-    public IndexedObject getReturnObject()
-    {
-        return null;
-    }
-    public void setReturnObject(IndexedObject returnObject)
-    {
-
     }
 }

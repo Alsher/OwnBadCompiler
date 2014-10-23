@@ -5,8 +5,6 @@ import com.base.Indexed.IndexedObject;
 
 public class ObjectReturn extends IndexedObject{
 
-    private static final String TYPE = "return";
-
     private int lineNumber;
     private IndexedObject returnObject;
     private boolean needsCompiler;
@@ -29,11 +27,22 @@ public class ObjectReturn extends IndexedObject{
         return "[Line:" + lineNumber + " | Type: return | Needs to be compiled:" + needsCompiler +  "| Return Object:" + returnObject + " | Returns value:" + getValue() + "]";
     }
 
-    public Object getValue()
-    {
+    public Object getValue() {
         if(returnObject != null)
             return returnObject.getValue();
-        return "Error: returnObject is not set";
+        return content;
+    }
+
+    public String getName()
+    {
+        return returnObject.getName();
+    }
+
+    public void setValue(Object object) {
+        if(object instanceof IndexedObject)
+            this.returnObject = (IndexedObject) object;
+        else
+            System.err.println("Error: " + object + " is not an IndexedObject");
     }
 
     public int getType()

@@ -29,6 +29,18 @@ public class ObjectRaw extends IndexedObject {
     public Object getValue() {
         return getRawContent();
     }
+    public void setValue(Object content)
+    {
+        if(content instanceof String)
+            this.rawContent = (String)content;
+        else
+            System.err.println("Error: " + content + " is not a String");
+    }
+
+    public String getName()
+    {
+        return rawContent;
+    }
 
     public int getLineNumber() {
         return lineNumber;

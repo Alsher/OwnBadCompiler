@@ -22,6 +22,12 @@ public class MathSystem {
 
         HashMap<String, IndexedObject> variables = rootMethod.getVariables();
 
+        HashMap<String, IndexedObject> parameters = new HashMap<>();
+
+        if(rootMethod.hasParameter())
+            for(IndexedObject parameter : rootMethod.getParameters())
+                parameters.put(parameter.getName(), parameter);
+
         components = Util.removeCharacter(components, ';');
 
         String[] parsedComponents = new String[components.size()];
@@ -44,14 +50,35 @@ public class MathSystem {
                     variables.get(component) instanceof ObjectInteger)
                 parsedComponents[i] = ((ObjectInteger) variables.get(component)).getValue().toString();
 
+            /** if not, check if component is valid parameter **/
+            else if(parameters.get(component) != null &&
+                    parameters.get(component) instanceof ObjectInteger)
+                parsedComponents[i] = ((ObjectInteger) parameters.get(component)).getValue().toString();
+
             /** if not, check if component is  method call **/
-            else if(containsMethodCall && Util.isMethodCall(component)) {
-                IndexedMethod method = Compiler.methods.get(Util.removeCharacters(component, '[', '(', ')', ']'));
-                method.call();
-                parsedComponents[i] = method.getReturnObject().getValue().toString();
+            else if(containsMethodCall && Util.isMethodCall(component))
+            {
+                String methodName = component.substring(0, Util.getPosition(component, '('));
+                IndexedMethod method = Compiler.methods.get(methodName);
+
+                if(method != null) {
+                    if (method.hasParameter()) {
+                        String paramString = component.substring(Util.getPosition(component, '(') + 1, Util.getPosition(component, ')'));
+                        String[] parameterInCall = Util.trimArray(paramString.split(","));
+                        int paramArrayCount = 0;
+                        for (String s : parameterInCall) {
+                            if (Util.isInteger(s))
+                                method.getParameter(paramArrayCount).setValue(Integer.valueOf(s));
+                            paramArrayCount++;
+                        }
+                    }
+                    method.call();
+                    parsedComponents[i] = method.getReturnObject().getValue().toString();
+                }
+                else
+                    parsedComponents[i] = null;
             }
         }
-
         return calculationEngine(parsedComponents);
     }
 

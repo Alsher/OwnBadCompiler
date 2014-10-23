@@ -117,8 +117,6 @@ public class Util {
         return getMarkedString(removeCharacter(Arrays.toString(tokens), ','));
     }
 
-
-
     public static String toUsefulString(ArrayList<String> input)
     {
         return Util.removeCharacters(input.toString(), ',');
@@ -172,7 +170,8 @@ public class Util {
 
     public static boolean isMethodCall(String input)
     {
-        return Compiler.methods.get(Util.removeCharacters(input, '[', '(', ')', ']')) != null;
+        int pos = Util.getPosition(input, '(');
+        return Compiler.methods.get(input.substring(0, pos == -1 ? input.length() : pos)) != null;
     }
 
     public static boolean isAReturnMethod(String possibleCall, HashMap<String, IndexedMethod> methods)
@@ -210,11 +209,7 @@ public class Util {
 
     public static boolean isAMathOperator(String input)
     {
-        for (int i = 0; i < input.length(); i++)
-            if ((input.charAt(i) == '+' || input.charAt(i) == '-') && input.length() <= 1)
-                return true;
-
-        return false;
+        return input.contains("+") || input.contains("-");
     }
 
     public static boolean isInitialization(String input)

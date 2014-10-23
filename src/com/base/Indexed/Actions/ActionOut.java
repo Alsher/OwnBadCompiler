@@ -31,8 +31,21 @@ public class ActionOut extends IndexedObject
     public String toString() {
         return "[Line: " + lineNumber + " | parameters: " + Util.toUsefulString(parameter) + "]";
     }
+
+    public String getName()
+    {
+        return "out";
+    }
+
     public Object getValue() {
         return parameter;
+    }
+    public void setValue(Object object)
+    {
+        if(object instanceof String)
+            parameter = new String[]{(String)object};
+        else
+            System.err.println("Error: " + object + " is not a String");
     }
 
     public String[] getParameter() {
