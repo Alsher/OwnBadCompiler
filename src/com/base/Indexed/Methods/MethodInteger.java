@@ -63,8 +63,6 @@ public class MethodInteger extends IndexedMethod {
                " | Name: " + name + " | Has content: " + (braceStart != null && braceEnd != null) + " | returns: " + (returnObject != null ? returnObject.getValue() : "null") + "]";
     }
 
-
-
     /** objects **/
     public void setObjects(ArrayList<IndexedObject> objects) {
         this.objects = objects;
@@ -172,6 +170,6 @@ public class MethodInteger extends IndexedMethod {
     /** type **/
     public int getType()
     {
-        return com.base.Compiler.METHOD_TYPE_INT;
+        return METHOD_TYPE_INT;
     }
 }

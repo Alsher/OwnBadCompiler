@@ -30,16 +30,6 @@ import java.util.HashMap;
 
 public class Compiler {
 
-    public static final int VAR_TYPE_RAW = 0;
-    public static final int VAR_TYPE_RETURN = 1;
-    public static final int VAR_TYPE_INT = 2;
-    public static final int VAR_TYPE_STRING = 3;
-    public static final int ACTION_TYPE_OUT = 4;
-
-    public static final int METHOD_TYPE_VOID = 0;
-    public static final int METHOD_TYPE_INT = 1;
-    public static final int METHOD_TYPE_STRING = 2;
-
     static HashMap<String, IndexedMethod> methods = new HashMap<>();
 
     static boolean debugOutput = true;
@@ -81,116 +71,109 @@ public class Compiler {
         for(IndexedObject object : method.getObjects())
             if(object.needsCompiler())
                 compileObject(method, object);
-        if(!(method.getReturnObject() instanceof ObjectReturn))
-        {
-
-            IndexedObject returnObject;
-//            if(method.getVariable())
-        }
     }
 
-    private static void compileObject(IndexedMethod rootMethod, Object object)
+    private static void compileObject(IndexedMethod rootMethod, IndexedObject object)
     {
-        if(object instanceof IndexedObject)
+        if(object instanceof ObjectInteger)
         {
-            if(object instanceof ObjectInteger)
-            {
-                ObjectInteger objectInteger = (ObjectInteger) object;
-                objectInteger.setIntValue(MathSystem.calculate(rootMethod, objectInteger.getStringValue(), true));
-                objectInteger.setNeedsCompiler(false);
-            }
-            else if(object instanceof ObjectString)
-            {
-                ObjectString objectString = (ObjectString) object;
-                objectString.setContent(StringSystem.getContent(rootMethod, objectString.getContent()));
-                objectString.setNeedsCompiler(false);
-            }
-            else if(object instanceof ObjectReturn)
-            {
-                ObjectReturn objectReturn = (ObjectReturn) object;
-                objectReturn.setReturnObject(rootMethod.getVariable(Util.removeCharacter(objectReturn.getContent().split(" ")[1], ';')));
-                objectReturn.setNeedsCompiler(false);
-            }
-            else if(object instanceof ActionOut)
-            {
-                ActionOut actionOut = (ActionOut) object;
-                String[] parameter = actionOut.getParameter();
-                for(int i = 0; i < parameter.length; i++) {
-                    String param = parameter[i];
-                    /** check for variables **/
-                    if (rootMethod.getVariable(param) != null && !rootMethod.getVariable(parameter[i]).needsCompiler())
-                        parameter[i] = rootMethod.getVariable(parameter[i]).getValue().toString();
+            ObjectInteger objectInteger = (ObjectInteger) object;
+            objectInteger.setIntValue(MathSystem.calculate(rootMethod, objectInteger.getStringValue(), Util.isMethodCall(objectInteger.getStringValue())));
+            objectInteger.setNeedsCompiler(false);
+            rootMethod.addVariable(objectInteger.getName(), objectInteger);
+        }
+        else if(object instanceof ObjectString)
+        {
+            ObjectString objectString = (ObjectString) object;
+            objectString.setContent(StringSystem.getContent(rootMethod, objectString.getContent()));
+            objectString.setNeedsCompiler(false);
+        }
+        else if(object instanceof ObjectReturn)
+        {
+            ObjectReturn objectReturn = (ObjectReturn) object;
+            objectReturn.setReturnObject(rootMethod.getVariable(Util.removeCharacter(objectReturn.getContent().split(" ")[1], ';')));
+            objectReturn.setNeedsCompiler(false);
+        }
+        else if(object instanceof ActionOut)
+        {
+            ActionOut actionOut = (ActionOut) object;
+            String[] parameter = actionOut.getParameter();
+            for(int i = 0; i < parameter.length; i++) {
+                String param = parameter[i];
 
-                    /** check for loose Strings **/
-                    else if (param.startsWith("\"") && param.endsWith("\""))
-                        parameter[i] = parameter[i].substring(1, param.length() - 1);
+                /** check for variables **/
+                if (rootMethod.getVariable(param) != null && !rootMethod.getVariable(parameter[i]).needsCompiler())
+                    parameter[i] = rootMethod.getVariable(parameter[i]).getValue().toString();
 
-                    /** check for method calls **/
-                    else {
-                        IndexedMethod method = methods.get(param.substring(0, Util.getPosition(param, '(')));
+                /** check for loose Strings **/
+                else if (param.startsWith("\"") && param.endsWith("\""))
+                    parameter[i] = parameter[i].substring(1, param.length() - 1);
 
-                        if (method != null)
+                /** check for method calls **/
+                else {
+                    IndexedMethod method = methods.get(param.substring(0, Util.getPosition(param, '(')));
+
+                    if (method != null)
+                    {
+                        if(method.hasParameter())
                         {
-                            if(method.hasParameter())
-                            {
-                                String paramString = param.substring(Util.getPosition(parameter[i], '(') + 1, Util.getPosition(param, ')'));
-                                String[] parameterInCall = Util.trimArray(paramString.split(","));
-                                int paramArrayCount = 0;
-                                for (String s : parameterInCall) {
-                                    if(Util.isInteger(s))
-                                        method.getParameter(paramArrayCount).setValue(Integer.valueOf(s));
-                                    else if(s.startsWith("\"") && s.endsWith("\""))
-                                        method.getParameter(paramArrayCount).setValue(s.substring(1, s.length() - 1));
+                            String paramString = param.substring(Util.getPosition(parameter[i], '(') + 1, Util.getPosition(param, ')'));
+                            String[] parameterInCall = Util.trimArray(paramString.split(","));
+                            int paramArrayCount = 0;
+                            for (String s : parameterInCall) {
+                                if(Util.isInteger(s))
+                                    method.getParameter(paramArrayCount).setValue(Integer.valueOf(s));
+                                else if(s.startsWith("\"") && s.endsWith("\""))
+                                    method.getParameter(paramArrayCount).setValue(s.substring(1, s.length() - 1));
 
-                                    else if(rootMethod.getVariable(s) != null)
-                                    {
-                                        IndexedObject var = rootMethod.getVariable(s);
-                                        if(var instanceof ObjectInteger)
-                                            method.getParameter(paramArrayCount).setValue(((ObjectInteger) var).getIntValue());
-                                        else if(var instanceof ObjectString)
-                                            method.getParameter(paramArrayCount).setValue(var.getValue());
-                                    }
-                                    //TODO: add support for rootMethod.getParameter(param)
-                                    else
-                                        method.getParameter(paramArrayCount).setValue(s);
-                                    paramArrayCount++;
+                                else if(rootMethod.getVariable(s) != null)
+                                {
+                                    IndexedObject var = rootMethod.getVariable(s);
+                                    if(var instanceof ObjectInteger)
+                                        method.getParameter(paramArrayCount).setValue(((ObjectInteger) var).getIntValue());
+                                    else if(var instanceof ObjectString)
+                                        method.getParameter(paramArrayCount).setValue(var.getValue());
                                 }
+                                //TODO: add support for rootMethod.getParameter(param)
+                                else
+                                    method.getParameter(paramArrayCount).setValue(s);
+                                paramArrayCount++;
                             }
-                            method.call();
-                            parameter[i] = methods.get(param.substring(0, Util.getPosition(param, '('))).getReturnObject().getValue().toString();
                         }
-                        else {
-                            System.err.println("Error: " + parameter[i] + " is not a valid parameter!");
-                            parameter = new String[]{"ERROR"};
-                        }
+                        method.call();
+                        parameter[i] = methods.get(param.substring(0, Util.getPosition(param, '('))).getReturnObject().getValue().toString();
+                    }
+                    else {
+                        System.err.println("Error: " + parameter[i] + " is not a valid parameter!");
+                        parameter = new String[]{"ERROR"};
                     }
                 }
-                actionOut.setParameter(parameter);
-                actionOut.setNeedsCompiler(false);
-                actionOut.call();
             }
+            actionOut.setParameter(parameter);
+            actionOut.setNeedsCompiler(false);
+            actionOut.call();
+        }
 
-            else if(object instanceof ObjectRaw)
+        else if(object instanceof ObjectRaw)
+        {
+            ObjectRaw objectRaw = (ObjectRaw) object;
+            if(objectRaw.getAdditionalInfo() == IndexedObject.VAR_TYPE_RAW)
             {
-                ObjectRaw objectRaw = (ObjectRaw) object;
-                if(objectRaw.getAdditionalInfo() == VAR_TYPE_RAW)
+                int equapOpPos = Util.getEqualOperator(objectRaw.getRawContent());
+                IndexedObject uObject =  rootMethod.getVariable(objectRaw.getRawContent().substring(0, equapOpPos - 1));
+                if(uObject != null)
                 {
-                    int equapOpPos = Util.getEqualOperator(objectRaw.getRawContent());
-                    IndexedObject uObject =  rootMethod.getVariable(objectRaw.getRawContent().substring(0, equapOpPos - 1));
-                    if(uObject != null)
+                    switch (uObject.getType())
                     {
-                        switch (uObject.getType())
-                        {
-                            case VAR_TYPE_INT:
-                                ObjectInteger objectInteger = (ObjectInteger)uObject;
-                                objectInteger.setIntValue(MathSystem.calculate(rootMethod, objectRaw.getRawContent().substring(equapOpPos + 1), true));
-                                break;
+                        case IndexedObject.VAR_TYPE_INT:
+                            ObjectInteger objectInteger = (ObjectInteger)uObject;
+                            objectInteger.setIntValue(MathSystem.calculate(rootMethod, objectRaw.getRawContent().substring(equapOpPos + 1), true));
+                            break;
 
-                            case VAR_TYPE_STRING:
-                                ObjectString objectString = (ObjectString)uObject;
-                                objectString.setContent(StringSystem.getContent(rootMethod, objectRaw.getRawContent().substring(equapOpPos + 1)));
-                                break;
-                        }
+                        case IndexedObject.VAR_TYPE_STRING:
+                            ObjectString objectString = (ObjectString)uObject;
+                            objectString.setContent(StringSystem.getContent(rootMethod, objectRaw.getRawContent().substring(equapOpPos + 1)));
+                            break;
                     }
                 }
             }

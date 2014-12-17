@@ -1,7 +1,7 @@
 package com.base.Indexed.Actions;
 
-import com.base.*;
 import com.base.Indexed.IndexedObject;
+import com.base.Util;
 
 public class ActionOut extends IndexedObject
 {
@@ -65,7 +65,7 @@ public class ActionOut extends IndexedObject
     }
 
     public int getType() {
-        return com.base.Compiler.ACTION_TYPE_OUT;
+        return ACTION_TYPE_OUT;
     }
 
     public boolean needsCompiler()

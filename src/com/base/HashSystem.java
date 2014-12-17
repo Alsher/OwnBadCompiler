@@ -45,7 +45,7 @@ public class HashSystem {
                         method.setBraceEnd(bracePosition.get(1));       //set brace positions in preReturn
                         method.setObjects(rawObjects);                  //set methods empty Object-Set to rawObjects
 
-                        method.setVariables(new HashMap<String, IndexedObject>());
+                        method.setVariables(new HashMap<>());
 
                         bracePosition = new ArrayList<>();              //clear bracePosition array
                         rawObjects = new ArrayList<>();                 //clear rawObjects
@@ -61,31 +61,21 @@ public class HashSystem {
     {
         String[] tokens = content.split(" ");
         int paramPosition = Util.getPosition(content, ':');
-        ArrayList<IndexedObject> parameter;
+        ArrayList<IndexedObject> parameter = new ArrayList<>();
 
-        if((paramPosition + 1) < content.length())
-        {
+        if((paramPosition + 1) < content.length()) {
             String[] param = content.substring(paramPosition + 1).split(",");
             param = Util.trimArray(param);
 
-            parameter = new ArrayList<>();
-
-            for(String s : param)
+            for (String s : param)
                 parameter.add(new ObjectRaw(line, s));
-
-            switch(tokens[1])
-            {
-                case "void": return new MethodVoid(line, Util.removeCharacter(tokens[2], ':'), parameter);
-                case "int" : return new MethodInteger(line, Util.removeCharacter(tokens[2], ':'), parameter);
-                case "String" : return new MethodString(line, Util.removeCharacter(tokens[2], ':'), parameter);
-                default: return null;
-            }
         }
+
         switch(tokens[1])
         {
-            case "void": return new MethodVoid(line, Util.removeCharacter(tokens[2], ':'));
-            case "int" : return new MethodInteger(line, Util.removeCharacter(tokens[2], ':'));
-            case "String" : return new MethodString(line, Util.removeCharacter(tokens[2], ':'));
+            case "void": return new MethodVoid(line, Util.removeCharacter(tokens[2], ':'), parameter);
+            case "int" : return new MethodInteger(line, Util.removeCharacter(tokens[2], ':'), parameter);
+            case "String" : return new MethodString(line, Util.removeCharacter(tokens[2], ':'), parameter);
             default: return null;
         }
     }

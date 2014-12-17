@@ -31,10 +31,11 @@ public class ParseSystem {
         //iterate through input accessed by input.values()
         for(IndexedMethod method : input.values())
         {
+            /** check for objects **/
             for(IndexedObject object : method.getObjects())
                 parseObject(method, object);
 
-            //check for parameter
+            /** check for parameters **/
             if(method.hasParameter()) {
                 for (IndexedObject object : method.getParameters())
                     parseParameter(method, object);
@@ -63,7 +64,7 @@ public class ParseSystem {
         //check for object identifier and parse according to it
         switch(tokens[0])
         {
-            case "int":   parseInteger(rootMethod, line, object.getLineNumber(), objectArrayList); break;
+            case "int":    parseInteger(rootMethod, line, object.getLineNumber(), objectArrayList); break;
             case "String": parseString(rootMethod, line, object.getLineNumber(), objectArrayList); break;
             case "return": parseReturn(rootMethod, line, object.getLineNumber()); break;
             case "action": parseAction(rootMethod, line, object.getLineNumber()); break;
@@ -87,7 +88,8 @@ public class ParseSystem {
                 object.setNeedsCompiler(false);                                        //flag the object as non-compiling
                 rootMethod.getVariables().put(object.getName(), object);
             } else {
-                object.setStringValue(Util.removeCharacters(Util.toUsefulString(tokens), '[', ']')); //add ObjectInteger with complete line as StringValue
+                String stringValue = line.substring(Util.getEqualOperator(line) + 1, line.length() - 1).trim();
+                object.setStringValue(stringValue); //add ObjectInteger with complete line as StringValue
                 rootMethod.addVariable(object.getName(), object);
             }
         }
@@ -153,13 +155,11 @@ public class ParseSystem {
 
     private static void parseAction(IndexedMethod rootMethod, String line, int lineNumber)
     {
-        //TODO: fix smartSplit bug with loose String method calls
         String[] tokens = StringSystem.smartSplit(line);
 
         switch (tokens[1])
         {
             case "out": parseActionOut(rootMethod, tokens, lineNumber);
-
             default: break;
         }
     }
@@ -181,7 +181,6 @@ public class ParseSystem {
 
             parameter[i - 2] = s;
         }
-
         action.setParameter(parameter);
         objectArrayList.add(action);
     }
@@ -204,7 +203,7 @@ public class ParseSystem {
         ObjectRaw object = new ObjectRaw(lineNumber, content);
 
         if(content.matches("[a-zA-Z]\\s[=]\\s[0-9a-zA-Z]"))
-            object.setAdditionalInfo(Compiler.VAR_TYPE_RAW);
+            object.setAdditionalInfo(IndexedObject.VAR_TYPE_RAW);
         objectArrayList.add(new ObjectRaw(lineNumber, content));
     }
 }

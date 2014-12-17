@@ -36,8 +36,12 @@ public class MethodVoid extends IndexedMethod {
         this.headerLineNumber = headerLineNumber;
         this.name = name;
 
-        this.parameter = parameter;
-        hasParameter = true;
+        if(parameter.size() != 0) {
+            this.parameter = parameter;
+            hasParameter = true;
+        }
+        else
+            hasParameter = false;
 
         objects = new ArrayList<>();
         actions = new ArrayList<>();
@@ -168,6 +172,6 @@ public class MethodVoid extends IndexedMethod {
     /** type **/
     public int getType()
     {
-        return com.base.Compiler.METHOD_TYPE_VOID;
+        return METHOD_TYPE_VOID;
     }
 }

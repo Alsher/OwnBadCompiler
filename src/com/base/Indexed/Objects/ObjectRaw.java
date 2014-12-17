@@ -50,7 +50,7 @@ public class ObjectRaw extends IndexedObject {
     }
 
     public int getType() {
-        return com.base.Compiler.VAR_TYPE_RAW;
+        return VAR_TYPE_RAW;
     }
 
     public String getRawContent() {

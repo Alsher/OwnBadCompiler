@@ -12,6 +12,10 @@ import java.util.HashMap;
 
 public abstract class IndexedMethod {
 
+    public static final int METHOD_TYPE_VOID = 0;
+    public static final int METHOD_TYPE_INT = 1;
+    public static final int METHOD_TYPE_STRING = 2;
+
     public HashMap<String, IndexedObject> variables;
     public ArrayList<IndexedObject> actions;
 

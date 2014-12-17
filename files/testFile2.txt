@@ -1,17 +1,31 @@
 - (void) main:
 {
-action out method(20);
-//action out stringMethod("hello"); //does not yet work
+action out addTwo(2, 9);
+action out subtractTwo(2, 2);
+action out addThree(2, 8, 5);
+action out addStrings("Hey man", " how are you doing");
 }
 
-- (int) method: int i
+- (int) addTwo: int i1, int i2
 {
-int returnI = i - 4;
+int returnI = i1 + i2;
 return returnI;
 }
 
-- (String) stringMethod: String s
+- (int) subtractTwo: int i1, int i2
 {
-String returnString = s;
-return returnString;
+int returnI = i1 - i2;
+return returnI;
+}
+
+- (int) addThree: int i1, int i2, int i3
+{
+int returnI = i1 + i2 + i3;
+return returnI;
+}
+
+- (String) addStrings: String s, String s2
+{
+String rString = s + s2 + "?";
+return rString;
 }

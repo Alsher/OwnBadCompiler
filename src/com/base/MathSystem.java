@@ -14,11 +14,11 @@ public class MathSystem {
 
     public static Integer calculate(IndexedMethod rootMethod, ArrayList<String> components, boolean containsMethodCall) //does currently only work for positive and negative values / + and - operators
     {
-
         int equalOpPos = Util.getEqualOperator(components);
 //        String equalop = components.get(equalOpPos);
 //        System.out.println("MS: " + components + equalop);
-        components = Util.removeFromTo(components, 0, equalOpPos);
+        if(equalOpPos != -1)
+            components = Util.removeFromTo(components, 0, equalOpPos);
 
         HashMap<String, IndexedObject> variables = rootMethod.getVariables();
 
@@ -42,7 +42,7 @@ public class MathSystem {
                 parsedComponents[i] = component;
 
             /** if not, check if mathematical operator **/
-            else if(Util.isAMathOperator(component))
+            else if(Util.isAMathOperator(component) && !Util.containsNonMathType(components.get(i)))
                 parsedComponents[i] = component;
 
             /** if not, check if component is valid variable **/
@@ -84,6 +84,16 @@ public class MathSystem {
 
     public static Integer calculate(IndexedMethod rootMethod, String components, boolean containsMethodCall)
     {
+        if(containsMethodCall) {
+            if (!Util.containsMathOperator(components))
+                return calculate(rootMethod, new ArrayList<>(Arrays.asList(components)), true);
+            else {
+                System.out.println(components);
+                if(Util.containsMathOperator(components.substring(Util.getPosition(components, '('), Util.getPosition(components, ')'))))
+                    return calculate(rootMethod, new ArrayList<>(Arrays.asList(components)), true);
+            }
+        }
+
         ArrayList<String> componentList = new ArrayList<>(Arrays.asList(components.split(" ")));
         return calculate(rootMethod, componentList, containsMethodCall);
     }

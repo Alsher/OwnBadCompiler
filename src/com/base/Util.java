@@ -149,10 +149,31 @@ public class Util {
         return m.find();
     }
 
+    public static boolean containsMathOperator(String input)
+    {
+        Pattern p = Pattern.compile("[+-]");
+        Matcher m = p.matcher(input);
+        return m.find();
+    }
+
+    public static boolean contains(String input, char c)
+    {
+        Pattern p = Pattern.compile("[" + c + "]");
+        Matcher m = p.matcher(input);
+        return m.find();
+    }
+
     public static int getEqualOperator(ArrayList<String> content)
     {
         for(int i = 0; i < content.size(); i++)
             if(content.get(i).contains("="))
+                return i;
+        return -1;
+    }
+    public static int getEqualOperator(String[] content)
+    {
+        for(int i = 0; i < content.length; i++)
+            if(content[i].contains("="))
                 return i;
         return 0;
     }
@@ -177,14 +198,17 @@ public class Util {
     public static boolean isAReturnMethod(String possibleCall, HashMap<String, IndexedMethod> methods)
     {
         String modifiedString = Util.removeCharacters(possibleCall, '(', ')');
-        return possibleCall.endsWith(")") && methods.get(modifiedString) != null && methods.get(modifiedString).getType() != Compiler.METHOD_TYPE_VOID;
+        return possibleCall.endsWith(")") && methods.get(modifiedString) != null && methods.get(modifiedString).getType() != IndexedMethod.METHOD_TYPE_VOID;
     }
 
     public static boolean isInteger(String input)
     {
-        for (int i = 0; i < input.length(); i++)
-            if (!Character.isDigit(input.charAt(i)))
+        for (int i = 0; i < input.length(); i++) {
+            if (i == 0 && input.charAt(i) == '-' && input.length() > 1)
+                continue;
+            if (!(Character.isDigit(input.charAt(i))))
                 return false;
+        }
 
         return true;
     }

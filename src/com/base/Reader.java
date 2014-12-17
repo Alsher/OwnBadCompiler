@@ -78,7 +78,7 @@ public class Reader
             /** add each line to system wide content variable **/
             while((line = reader.readLine()) != null) {
                 if (!line.equals("") && !line.startsWith("//")) {
-                    line = Util.removeCharacters(line, '\t'); //remove tabs
+                    line = line.trim(); //remove tabs
                     indexedLines.add(new IndexedLine(lineCount, line));
                 }
                 lineCount++;

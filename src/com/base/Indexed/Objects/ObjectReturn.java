@@ -47,7 +47,7 @@ public class ObjectReturn extends IndexedObject{
 
     public int getType()
     {
-        return com.base.Compiler.VAR_TYPE_RETURN;
+        return VAR_TYPE_RETURN;
     }
 
     public int getLineNumber() {

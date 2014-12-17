@@ -16,6 +16,13 @@ package com.base.Indexed;
 
 public abstract class IndexedObject
 {
+    public static final int VAR_TYPE_RAW = 0;
+    public static final int VAR_TYPE_RETURN = 1;
+    public static final int VAR_TYPE_INT = 2;
+    public static final int VAR_TYPE_STRING = 3;
+
+    public static final int ACTION_TYPE_OUT = 4;
+
     //possibility to add a parent system right here
 
     public abstract String toString();

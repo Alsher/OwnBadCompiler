@@ -55,7 +55,7 @@ public class ObjectString extends IndexedObject {
 
     public int getType()
     {
-        return com.base.Compiler.VAR_TYPE_STRING;
+        return VAR_TYPE_STRING;
     }
 
     public int getLineNumber() {

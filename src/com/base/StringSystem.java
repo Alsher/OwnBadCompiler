@@ -13,7 +13,7 @@ public class StringSystem
 
     public static String getContent(IndexedMethod rootMethod, String content)
     {
-        ArrayList<String> components = new ArrayList<>(Arrays.asList(content.split(" ")));
+        ArrayList<String> components = new ArrayList<>(Arrays.asList(smartSplit(content)));
 
         int equalOpPos = Util.getEqualOperator(components);
 //        String equalop = components.get(equalOpPos);
@@ -39,30 +39,32 @@ public class StringSystem
         {
             String component = components.get(i);
 
+            if(component.startsWith("\"") && component.endsWith("\""))
+                parsedComponents[i] = component.substring(1, component.length() - 1);
+
             /** check if component is variable **/
-            if(variables.get(component) != null &&
-               variables.get(component) instanceof ObjectString)
+            else if (variables.get(component) != null &&
+                    variables.get(component) instanceof ObjectString)
                 parsedComponents[i] = ((ObjectString) variables.get(component)).getValue();
 
             /** check if component is parameter **/
 
-            else if(parameters.get(component) != null &&
+            else if (parameters.get(component) != null &&
                     parameters.get(component) instanceof ObjectString)
                 parsedComponents[i] = ((ObjectString) parameters.get(component)).getValue();
 
             /** check if component is valid method call **/
-            else if(Util.isMethodCall(component))
-            {
+            else if (Util.isMethodCall(component)) {
                 String methodName = component.substring(0, Util.getPosition(component, '('));
                 IndexedMethod method = Compiler.methods.get(methodName);
 
-                if(method != null) {
+                if (method != null) {
                     if (method.hasParameter()) {
                         String paramString = component.substring(Util.getPosition(component, '(') + 1, Util.getPosition(component, ')'));
                         String[] parameterInCall = Util.trimArray(paramString.split(","));
                         int paramArrayCount = 0;
                         for (String s : parameterInCall) {
-                            if(s.startsWith("\"") && s.endsWith("\""))
+                            if (s.startsWith("\"") && s.endsWith("\""))
                                 method.getParameter(paramArrayCount).setValue(s.substring(1, s.length() - 1));
                             else
                                 method.getParameter(paramArrayCount).setValue(s);
@@ -71,13 +73,21 @@ public class StringSystem
                     }
                     method.call();
                     parsedComponents[i] = method.getReturnObject().getValue().toString();
-                }
-                else
+                } else
                     parsedComponents[i] = null;
             }
         }
+        return calculationEngine(parsedComponents);
+    }
 
-        return Util.toUsefulString(parsedComponents);
+    private static String calculationEngine(String[] input)
+    {
+        String s = "";
+        for (String anInput : input) {
+            if (anInput != null)
+                s += anInput;
+        }
+        return s;
     }
 
     public static String[] smartSplit(String input) {
@@ -86,6 +96,7 @@ public class StringSystem
         int space = -1;
         for (int i = 0; i < input.length(); i++)
         {
+            /** check for quotation marks **/
             if(input.charAt(i) == '\"')
             {
                 int start = i, end = -1;
@@ -102,6 +113,17 @@ public class StringSystem
                     space = end;
                 }
             }
+            /** check for brackets and skip them **/
+            else if(input.charAt(i) == '(')
+            {
+                for (int j = i + 1; j < input.length(); j++) {
+                    if (input.charAt(j) == ')') {
+                        i = j + 1;
+                        break;
+                    }
+                }
+            }
+            /** check for space character **/
             else if(input.charAt(i) == ' ') {
                 if(space == -1)
                     sList.add(input.substring(0, i));
@@ -109,11 +131,10 @@ public class StringSystem
                     sList.add(input.substring(space + 1, i));
                 space = i;
             }
-            if(i == input.length() - 1) {
-                space++;
-                sList.add(input.substring(space == -1 ? 0 : space));
-            }
         }
+        /** add last piece in case spaces have been detected and not yet been added **/
+        sList.add(input.substring(space == -1 ? 0 : (space + 1)));
+
         return sList.toArray(new String[sList.size()]);
     }
 }

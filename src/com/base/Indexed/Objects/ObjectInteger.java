@@ -53,7 +53,7 @@ public class ObjectInteger extends IndexedObject {
 
     public int getType()
     {
-        return com.base.Compiler.VAR_TYPE_INT;
+        return VAR_TYPE_INT;
     }
 
     public String getName() {
